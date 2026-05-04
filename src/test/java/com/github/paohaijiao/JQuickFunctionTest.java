@@ -20,6 +20,7 @@ import com.github.paohaijiao.function.JQuickFunction;
 import com.github.paohaijiao.function.api.JQuickFlinkFunction;
 import com.github.paohaijiao.function.api.JQuickSparkFunction;
 import com.github.paohaijiao.manage.manager.JQuickFunctionManager;
+import com.github.paohaijiao.wapper.JQuickFunctionWrapper;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.spark.SparkConf;
@@ -29,6 +30,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * packageName com.github.paohaijiao
@@ -88,6 +90,28 @@ public class JQuickFunctionTest {
         context.put(StreamExecutionEnvironment.class, env);
         List<Integer> data = Arrays.asList(1, 2, 3);
         Object result = JQuickFunctionManager.dispatch((JQuickFunction) function, data, context);
+        System.out.println(result);
+    }
+    @Test
+    public void testFlinkFunction1() throws Exception {
+        JQuickFunction<String, String> func = input -> {
+            if (input == null) {
+                throw new IllegalArgumentException("Input cannot be null");
+            }
+            return "Hello " + input;
+        };
+        JQuickFunction<String, String> withFallback = JQuickFunctionWrapper.withFallback(func,
+                exception -> {
+                    System.err.println("Error: " + exception.getMessage());
+                    return "Default value";
+                }
+        );
+        JQuickFunction<String, String> enhanced = JQuickFunctionWrapper
+                .builder(func)
+                .withFallback(e -> "fallback result")  // Function<Exception, O>
+                .withLogging(Logger.getGlobal())
+                .build();
+        String result = enhanced.apply("nihao");
         System.out.println(result);
     }
 }
