@@ -7,6 +7,12 @@
         <version>1.7.9</version>
     </parent>
     <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>jquick-function-core</module>
+        <module>jquick-function-flink-plugin</module>
+        <module>jquick-function-spark-plugin</module>
+    </modules>
     <artifactId>jquick-function</artifactId>
     <name>jquick-function</name>
     <properties>

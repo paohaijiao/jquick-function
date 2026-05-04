@@ -13,7 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.wapper;
+package com.github.paohaijiao.wrap;
 
 import com.github.paohaijiao.function.JQuickFunction;
 
