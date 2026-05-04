@@ -15,9 +15,20 @@
  */
 package com.github.paohaijiao;
 
-import com.github.paohaijiao.function.JQuickAbstractFunctionService;
-import com.github.paohaijiao.manage.JQuickFunctionRegistryManager;
+import com.github.paohaijiao.context.JQuickFunctionContext;
+import com.github.paohaijiao.function.JQuickFunction;
+import com.github.paohaijiao.function.api.JQuickFlinkFunction;
+import com.github.paohaijiao.function.api.JQuickSparkFunction;
+import com.github.paohaijiao.manage.manager.JQuickFunctionManager;
+import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * packageName com.github.paohaijiao
@@ -30,28 +41,53 @@ public class JQuickFunctionTest {
 
     @Test
     public void test(){
-        JQuickFunctionRegistryManager manager = JQuickFunctionRegistryManager.getInstance();
-        String lower = (String) manager.call("toLower", "HELLO WORLD");
-        System.out.println(lower); // hello world
+        JQuickFunction<Integer, Integer> function = x -> x * 2;
+        JQuickFunctionContext context = new JQuickFunctionContext();
+        Integer result = JQuickFunctionManager.dispatch(function, 10, context);
+        System.out.println(result);
+    }
 
-        Number sum = (Number) manager.call("sum", 1, 2, 3, 4, 5);
-        System.out.println(sum); // 15.0
-        manager.register("greet", args -> "Hello, " + args[0]);
-        String greeting = (String) manager.call("greet", "World");
-        System.out.println(greeting); // Hello, World
-        manager.registerService(new JQuickAbstractFunctionService("multiply", "乘法") {
-            @Override
-            public Object execute(Object... args) {
-                double result = 1;
-                for (Object arg : args) {
-                    result *= ((Number) arg).doubleValue();
-                }
-                return result;
-            }
-        });
+    @Test
+    public void test1() {
+        JQuickSparkFunction<List<Integer>, List<Integer>> function = (sc, data) -> sc.parallelize(data)
+                .map((org.apache.spark.api.java.function.Function<Integer, Integer>) x -> x * 2)
+                .collect();
+        JQuickFunctionContext context = new JQuickFunctionContext();
+        SparkConf conf = new SparkConf()
+                .setAppName("test")
+                .setMaster("local[*]"); // 本地运行
+        JavaSparkContext sc = new JavaSparkContext(conf);
+        context.put(JavaSparkContext.class, sc);
+        List<Integer> data = Arrays.asList(1, 2, 3);
+        List<Integer> result =
+                JQuickFunctionManager.dispatch(function, data, context);
 
-        // 获取函数信息
-        System.out.println("函数数量: " + manager.size());
-        System.out.println("函数列表: " + manager.getFunctionNames());
+        System.out.println(result);
+    }
+
+    @Test
+    public void testFlinkFunction() throws Exception {
+        JQuickFlinkFunction<List<Integer>, List<Integer>> function =
+                (executionEnv, data) -> {
+                    List<Integer> result = new ArrayList<>();
+                    try (org.apache.flink.util.CloseableIterator<Integer> it =
+                                 executionEnv
+                                         .fromCollection(data)
+                                         .map((MapFunction<Integer, Integer>) value -> value * 2)
+                                         .executeAndCollect()) {
+
+                        while (it.hasNext()) {
+                            result.add(it.next());
+                        }
+                    }
+
+                    return result;
+                };
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        JQuickFunctionContext context = new JQuickFunctionContext();
+        context.put(StreamExecutionEnvironment.class, env);
+        List<Integer> data = Arrays.asList(1, 2, 3);
+        Object result = JQuickFunctionManager.dispatch((JQuickFunction) function, data, context);
+        System.out.println(result);
     }
 }
