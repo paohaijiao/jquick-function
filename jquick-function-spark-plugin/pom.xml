@@ -9,4 +9,10 @@
     <artifactId>jquick-function-spark-plugin</artifactId>
     <name>Archetype - jquick-function-spark-plugin</name>
     <url>http://maven.apache.org</url>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.paohaijiao</groupId>
+            <artifactId>jquick-function-core</artifactId>
+        </dependency>
+    </dependencies>
 </project>
