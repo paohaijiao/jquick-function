@@ -1,6 +1,5 @@
-package com.github.paohaijiao.function.api;
+package com.github.paohaijiao.function;
 
-import com.github.paohaijiao.function.JQuickFunction;
 import org.apache.spark.api.java.JavaSparkContext;
 
 @FunctionalInterface

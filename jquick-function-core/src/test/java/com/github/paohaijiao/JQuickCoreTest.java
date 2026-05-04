@@ -13,35 +13,26 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.plugin.local;
+package com.github.paohaijiao;
 
 import com.github.paohaijiao.context.JQuickFunctionContext;
-import com.github.paohaijiao.plugin.JQuickFunctionExecutor;
 import com.github.paohaijiao.function.JQuickFunction;
-import com.github.paohaijiao.spi.anno.Priority;
+import com.github.paohaijiao.manage.JQuickFunctionManager;
+import org.junit.Test;
 
 /**
- * packageName com.github.paohaijiao.executor.local
+ * packageName com.github.paohaijiao
  *
  * @author Martin
  * @version 1.0.0
  * @since 2026/5/4
  */
-@Priority(10)
-public class JQuickLocalFunctionExecutor implements JQuickFunctionExecutor {
-
-    @Override
-    public boolean supports(JQuickFunction<?, ?> function) {
-        return true; // 默认兜底
-    }
-
-    @Override
-    public <I, O> O execute(JQuickFunction<I, O> function, I input, JQuickFunctionContext context) {
-        return function.apply(input);
-    }
-
-    @Override
-    public String engine() {
-        return "java";
+public class JQuickCoreTest {
+    @Test
+    public void test(){
+        JQuickFunction<Integer, Integer> function = x -> x * 2;
+        JQuickFunctionContext context = new JQuickFunctionContext();
+        Integer result = JQuickFunctionManager.dispatch(function, 10, context);
+        System.out.println(result);
     }
 }

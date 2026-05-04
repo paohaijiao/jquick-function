@@ -16,15 +16,12 @@
 package com.github.paohaijiao;
 
 import com.github.paohaijiao.context.JQuickFunctionContext;
+import com.github.paohaijiao.function.JQuickFlinkFunction;
 import com.github.paohaijiao.function.JQuickFunction;
-import com.github.paohaijiao.function.api.JQuickFlinkFunction;
-import com.github.paohaijiao.function.api.JQuickSparkFunction;
 import com.github.paohaijiao.manage.JQuickFunctionManager;
-import com.github.paohaijiao.wapper.JQuickFunctionWrapper;
+import com.github.paohaijiao.wrap.JQuickFunctionWrapper;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -39,31 +36,9 @@ import java.util.logging.Logger;
  * @version 1.0.0
  * @since 2026/5/4
  */
-public class JQuickFunctionTest {
+public class JQuickFlinkTest {
 
-    @Test
-    public void test(){
-        JQuickFunction<Integer, Integer> function = x -> x * 2;
-        JQuickFunctionContext context = new JQuickFunctionContext();
-        Integer result = JQuickFunctionManager.dispatch(function, 10, context);
-        System.out.println(result);
-    }
 
-    @Test
-    public void test1() {
-        JQuickSparkFunction<List<Integer>, List<Integer>> function = (sc, data) -> sc.parallelize(data)
-                .map((org.apache.spark.api.java.function.Function<Integer, Integer>) x -> x * 2)
-                .collect();
-        JQuickFunctionContext context = new JQuickFunctionContext();
-        SparkConf conf = new SparkConf()
-                .setAppName("test")
-                .setMaster("local[*]"); // 本地运行
-        JavaSparkContext sc = new JavaSparkContext(conf);
-        context.put(JavaSparkContext.class, sc);
-        List<Integer> data = Arrays.asList(1, 2, 3);
-        List<Integer> result = JQuickFunctionManager.dispatch(function, data, context);
-        System.out.println(result);
-    }
 
     @Test
     public void testFlinkFunction() throws Exception {

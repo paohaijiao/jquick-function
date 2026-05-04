@@ -13,7 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.plugin.spark;
+package com.github.paohaijiao.plugin;
 
 import com.github.paohaijiao.context.JQuickFunctionContext;
 import com.github.paohaijiao.plugin.JQuickFunctionExecutor;
@@ -23,7 +23,7 @@ import com.github.paohaijiao.spi.anno.Priority;
 import org.apache.spark.api.java.JavaSparkContext;
 
 @Priority(50)
-public class JQuickSparkFunctionExecutor implements JQuickFunctionExecutor {
+public class JQuickSparkFunctionPlugin implements JQuickFunctionExecutor {
 
     @Override
     public boolean supports(JQuickFunction<?, ?> function) {
