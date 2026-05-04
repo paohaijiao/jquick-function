@@ -16,25 +16,36 @@
 package com.github.paohaijiao.plugin;
 
 import com.github.paohaijiao.context.JQuickFunctionContext;
-import com.github.paohaijiao.plugin.JQuickFunctionExecutor;
 import com.github.paohaijiao.function.JQuickFunction;
-import com.github.paohaijiao.function.api.JQuickSparkFunction;
 import com.github.paohaijiao.spi.anno.Priority;
-import org.apache.spark.api.java.JavaSparkContext;
 
 @Priority(50)
-public class JQuickSparkFunctionPlugin implements JQuickFunctionExecutor {
+public class JQuickSparkFunctionPlugin implements JQuickFunctionPlugin {
 
     @Override
     public boolean supports(JQuickFunction<?, ?> function) {
-        return function instanceof JQuickSparkFunction;
+        try {
+            Class<?> sparkFuncClass = Class.forName("com.github.paohaijiao.function.api.JQuickSparkFunction");
+            return sparkFuncClass.isAssignableFrom(function.getClass());
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     @Override
     public <I, O> O execute(JQuickFunction<I, O> function, I input, JQuickFunctionContext context) {
-        JQuickSparkFunction<I, O> sparkFunction = (JQuickSparkFunction<I, O>) function;
-        JavaSparkContext sc = context.get(JavaSparkContext.class);
-        return sparkFunction.run(sc, input);
+        try {
+            Object sparkFunction = function;
+            Object sc = context.get(Class.forName("org.apache.spark.api.java.JavaSparkContext"));
+            java.lang.reflect.Method runMethod = sparkFunction.getClass().getMethod("run",
+                    Class.forName("org.apache.spark.api.java.JavaSparkContext"), Object.class);
+
+            @SuppressWarnings("unchecked")
+            O result = (O) runMethod.invoke(sparkFunction, sc, input);
+            return result;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to execute Spark function", e);
+        }
     }
 
     @Override

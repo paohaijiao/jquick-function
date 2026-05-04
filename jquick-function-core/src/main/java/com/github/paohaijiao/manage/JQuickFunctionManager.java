@@ -33,8 +33,7 @@ package com.github.paohaijiao.manage;
 import com.github.paohaijiao.context.JQuickFunctionContext;
 import com.github.paohaijiao.plugin.JQuickFunctionPlugin;
 import com.github.paohaijiao.function.JQuickFunction;
-import com.github.paohaijiao.spi.ServiceLoader;
-
+import com.github.paohaijiao.spi.JQuickServiceLoader;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -65,7 +64,7 @@ public class JQuickFunctionManager {
     /**
      * 私有构造函数，防止实例化
      */
-    private JQuickFunctionManager() {
+    public  JQuickFunctionManager() {
         throw new UnsupportedOperationException("Utility class");
     }
 
@@ -341,7 +340,7 @@ public class JQuickFunctionManager {
         if (globalExecutors == null) {
             synchronized (JQuickFunctionManager.class) {
                 if (globalExecutors == null) {
-                    globalExecutors = ServiceLoader.loadServicesByPriority(JQuickFunctionPlugin.class);
+                    globalExecutors = JQuickServiceLoader.loadServicesByPriority(JQuickFunctionPlugin.class);
                 }
             }
         }
