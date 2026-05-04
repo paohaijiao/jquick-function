@@ -1,9 +1,9 @@
-package com.github.paohaijiao.executor;
+package com.github.paohaijiao.plugin;
 
 import com.github.paohaijiao.context.JQuickFunctionContext;
 import com.github.paohaijiao.function.JQuickFunction;
 
-public interface JQuickFunctionExecutor {
+public interface JQuickFunctionPlugin {
 
     /**
      * 是否支持该函数

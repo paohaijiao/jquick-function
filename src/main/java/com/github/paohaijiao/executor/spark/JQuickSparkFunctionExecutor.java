@@ -13,10 +13,10 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.executor.spark;
+package com.github.paohaijiao.plugin.spark;
 
 import com.github.paohaijiao.context.JQuickFunctionContext;
-import com.github.paohaijiao.executor.JQuickFunctionExecutor;
+import com.github.paohaijiao.plugin.JQuickFunctionExecutor;
 import com.github.paohaijiao.function.JQuickFunction;
 import com.github.paohaijiao.function.api.JQuickSparkFunction;
 import com.github.paohaijiao.spi.anno.Priority;

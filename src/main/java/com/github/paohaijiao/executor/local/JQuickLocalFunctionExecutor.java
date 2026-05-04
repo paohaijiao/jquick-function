@@ -13,10 +13,10 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.executor.local;
+package com.github.paohaijiao.plugin.local;
 
 import com.github.paohaijiao.context.JQuickFunctionContext;
-import com.github.paohaijiao.executor.JQuickFunctionExecutor;
+import com.github.paohaijiao.plugin.JQuickFunctionExecutor;
 import com.github.paohaijiao.function.JQuickFunction;
 import com.github.paohaijiao.spi.anno.Priority;
 

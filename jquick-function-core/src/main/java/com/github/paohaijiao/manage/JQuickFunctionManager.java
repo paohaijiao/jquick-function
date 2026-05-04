@@ -31,7 +31,7 @@ package com.github.paohaijiao.manage;
  */
 
 import com.github.paohaijiao.context.JQuickFunctionContext;
-import com.github.paohaijiao.executor.JQuickFunctionExecutor;
+import com.github.paohaijiao.plugin.JQuickFunctionPlugin;
 import com.github.paohaijiao.function.JQuickFunction;
 import com.github.paohaijiao.spi.ServiceLoader;
 
@@ -52,13 +52,13 @@ public class JQuickFunctionManager {
 
     private static final Map<String, JQuickFunction<?, ?>> functionCache = new ConcurrentHashMap<>();
 
-    private static final Map<Class<?>, JQuickFunctionExecutor> executorCache = new ConcurrentHashMap<>();
+    private static final Map<Class<?>, JQuickFunctionPlugin> executorCache = new ConcurrentHashMap<>();
 
     private static final ThreadLocal<JQuickFunctionContext> defaultContext = new ThreadLocal<>();
 
     private static final Map<String, FunctionStats> statsMap = new ConcurrentHashMap<>();
 
-    private static volatile List<JQuickFunctionExecutor> globalExecutors = null;
+    private static volatile List<JQuickFunctionPlugin> globalExecutors = null;
 
     private static ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -80,7 +80,7 @@ public class JQuickFunctionManager {
      * @return 执行结果
      */
     public static <I, O> O dispatch(JQuickFunction<I, O> function, I input, JQuickFunctionContext context) {
-        JQuickFunctionExecutor executor = getExecutor(function);
+        JQuickFunctionPlugin executor = getExecutor(function);
         return executor.execute(function, input, context);
     }
 
@@ -316,13 +316,13 @@ public class JQuickFunctionManager {
      * @return 合适的执行器
      * @throws RuntimeException 如果没有找到合适的执行器
      */
-    private static JQuickFunctionExecutor getExecutor(JQuickFunction<?, ?> function) {
+    private static JQuickFunctionPlugin getExecutor(JQuickFunction<?, ?> function) {
         Class<?> functionClass = function.getClass();
         if (executorCache.containsKey(functionClass)) { // 先从缓存中获取
             return executorCache.get(functionClass);
         }
-        List<JQuickFunctionExecutor> executors = getGlobalExecutors(); // 获取所有执行器
-        for (JQuickFunctionExecutor executor : executors) {// 查找支持该函数的执行器
+        List<JQuickFunctionPlugin> executors = getGlobalExecutors(); // 获取所有执行器
+        for (JQuickFunctionPlugin executor : executors) {// 查找支持该函数的执行器
             if (executor.supports(function)) {
                 executorCache.put(functionClass, executor);
                 return executor;
@@ -337,11 +337,11 @@ public class JQuickFunctionManager {
      *
      * @return 执行器列表
      */
-    private static List<JQuickFunctionExecutor> getGlobalExecutors() {
+    private static List<JQuickFunctionPlugin> getGlobalExecutors() {
         if (globalExecutors == null) {
             synchronized (JQuickFunctionManager.class) {
                 if (globalExecutors == null) {
-                    globalExecutors = ServiceLoader.loadServicesByPriority(JQuickFunctionExecutor.class);
+                    globalExecutors = ServiceLoader.loadServicesByPriority(JQuickFunctionPlugin.class);
                 }
             }
         }
@@ -361,7 +361,7 @@ public class JQuickFunctionManager {
      *
      * @param executor 执行器实例
      */
-    public static void registerExecutor(JQuickFunctionExecutor executor) {
+    public static void registerExecutor(JQuickFunctionPlugin executor) {
         refreshExecutors(); // 强制刷新全局执行器列表
     }
 
@@ -661,7 +661,7 @@ public class JQuickFunctionManager {
      *
      * @return 支持的类型映射
      */
-    public static Map<Class<?>, JQuickFunctionExecutor> getSupportedFunctions() {
+    public static Map<Class<?>, JQuickFunctionPlugin> getSupportedFunctions() {
         return new HashMap<>(executorCache);
     }
 

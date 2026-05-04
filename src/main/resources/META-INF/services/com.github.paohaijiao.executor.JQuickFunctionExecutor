@@ -1,3 +1,0 @@
-com.github.paohaijiao.executor.local.JQuickLocalFunctionExecutor
-com.github.paohaijiao.executor.spark.JQuickSparkFunctionExecutor
-com.github.paohaijiao.executor.flink.JQuickFlinkFunctionExecutor

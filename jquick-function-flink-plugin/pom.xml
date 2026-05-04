@@ -19,6 +19,13 @@
         <dependency>
             <groupId>io.github.paohaijiao</groupId>
             <artifactId>jquick-function-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-streaming-java</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

@@ -9,23 +9,10 @@
     <artifactId>jquick-function-core</artifactId>
     <name>quick-function-core</name>
     <url>http://maven.apache.org</url>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.github.paohaijiao</groupId>
-                <artifactId>jquick-function-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.paohaijiao</groupId>
-                <artifactId>jquick-function-flink-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.paohaijiao</groupId>
-                <artifactId>jquick-function-spark-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+<dependencies>
+    <dependency>
+        <groupId>io.github.paohaijiao</groupId>
+        <artifactId>javelin-core</artifactId>
+    </dependency>
+</dependencies>
 </project>
