@@ -22,7 +22,7 @@ package com.github.paohaijiao.core.exception;
  * @version 1.0.0
  * @since 2026/5/4
  */
-public class JQuickFunctionException extends RuntimeException{
+public class JQuickFunctionException extends RuntimeException {
 
     /**
      * 错误码（可选，用于统一异常码体系）

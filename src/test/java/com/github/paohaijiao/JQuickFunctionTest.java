@@ -19,7 +19,7 @@ import com.github.paohaijiao.context.JQuickFunctionContext;
 import com.github.paohaijiao.function.JQuickFunction;
 import com.github.paohaijiao.function.api.JQuickFlinkFunction;
 import com.github.paohaijiao.function.api.JQuickSparkFunction;
-import com.github.paohaijiao.manage.manager.JQuickFunctionManager;
+import com.github.paohaijiao.manage.JQuickFunctionManager;
 import com.github.paohaijiao.wapper.JQuickFunctionWrapper;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -61,9 +61,7 @@ public class JQuickFunctionTest {
         JavaSparkContext sc = new JavaSparkContext(conf);
         context.put(JavaSparkContext.class, sc);
         List<Integer> data = Arrays.asList(1, 2, 3);
-        List<Integer> result =
-                JQuickFunctionManager.dispatch(function, data, context);
-
+        List<Integer> result = JQuickFunctionManager.dispatch(function, data, context);
         System.out.println(result);
     }
 
