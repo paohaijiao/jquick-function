@@ -71,7 +71,6 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
             <version>3.4.1</version>
-
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
