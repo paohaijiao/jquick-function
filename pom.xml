@@ -12,6 +12,7 @@
         <module>jquick-function-core</module>
         <module>jquick-function-flink-plugin</module>
         <module>jquick-function-spark-plugin</module>
+        <module>jquick-function-java-plugin</module>
     </modules>
     <artifactId>jquick-function</artifactId>
     <name>jquick-function</name>
