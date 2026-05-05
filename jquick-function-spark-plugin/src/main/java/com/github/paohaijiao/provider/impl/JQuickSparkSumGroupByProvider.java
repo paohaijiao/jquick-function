@@ -23,12 +23,11 @@ package com.github.paohaijiao.provider.impl;
  * @since 2026/5/5
  */
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
-import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
+import com.github.paohaijiao.compute.JQuickSparkComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
 import com.github.paohaijiao.provider.JQuickSparkGroupByAggregationProvider;
 import org.apache.spark.sql.*;
-import org.apache.spark.sql.types.DataType;
-import org.apache.spark.sql.types.DataTypes;
+
 import java.util.List;
 
 import static org.apache.spark.sql.functions.*;
@@ -57,7 +56,7 @@ public class JQuickSparkSumGroupByProvider extends JQuickSparkGroupByAggregation
     public JQuickComputeTypeImpl getType() {
         return new JQuickSparkComputeTypeSumImpl();
     }
-    private static class JQuickSparkComputeTypeSumImpl extends JQuickJavaComputeTypeImpl {
+    private static class JQuickSparkComputeTypeSumImpl extends JQuickSparkComputeTypeImpl {
         @Override
         public String getMethod() {
             return JQuickProviderMethodConstants.SUM;

@@ -15,12 +15,10 @@
  */
 package com.github.paohaijiao.provider.impl;
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
-import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
+import com.github.paohaijiao.compute.JQuickSparkComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
 import com.github.paohaijiao.provider.JQuickSparkGroupByAggregationProvider;
 import org.apache.spark.sql.*;
-import org.apache.spark.sql.types.DataType;
-import org.apache.spark.sql.types.DataTypes;
 
 import java.util.List;
 
@@ -47,7 +45,7 @@ public class JQuickSparkAvgGroupByProvider extends JQuickSparkGroupByAggregation
     public JQuickComputeTypeImpl getType() {
         return new JQuickSparkComputeTypeSumImpl();
     }
-    private static class JQuickSparkComputeTypeSumImpl extends JQuickJavaComputeTypeImpl {
+    private static class JQuickSparkComputeTypeSumImpl extends JQuickSparkComputeTypeImpl {
         @Override
         public String getMethod() {
             return JQuickProviderMethodConstants.AVG;

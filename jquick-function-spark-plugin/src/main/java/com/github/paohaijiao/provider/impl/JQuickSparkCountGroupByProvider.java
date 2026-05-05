@@ -15,7 +15,7 @@
  */
 package com.github.paohaijiao.provider.impl;
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
-import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
+import com.github.paohaijiao.compute.JQuickSparkComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
 import com.github.paohaijiao.provider.JQuickSparkGroupByAggregationProvider;
 import org.apache.spark.sql.*;
@@ -61,7 +61,7 @@ public class JQuickSparkCountGroupByProvider extends JQuickSparkGroupByAggregati
     public JQuickComputeTypeImpl getType() {
         return new JQuickSparkComputeTypeCountImpl();
     }
-    private static class JQuickSparkComputeTypeCountImpl extends JQuickJavaComputeTypeImpl {
+    private static class JQuickSparkComputeTypeCountImpl extends JQuickSparkComputeTypeImpl {
         @Override
         public String getMethod() {
             return JQuickProviderMethodConstants.COUNT;

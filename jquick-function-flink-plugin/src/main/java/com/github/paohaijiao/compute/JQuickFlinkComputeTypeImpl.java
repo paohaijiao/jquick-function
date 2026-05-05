@@ -15,8 +15,7 @@
  */
 package com.github.paohaijiao.compute;
 
-import com.github.paohaijiao.type.impl.JQuickJavaProvider;
-import com.github.paohaijiao.type.impl.JQuickSparkProvider;
+import com.github.paohaijiao.type.impl.JQuickFlinkProvider;
 
 /**
  * packageName com.github.paohaijiao.compute
@@ -25,10 +24,10 @@ import com.github.paohaijiao.type.impl.JQuickSparkProvider;
  * @version 1.0.0
  * @since 2026/5/5
  */
-public abstract class JQuickJavaComputeTypeImpl extends JQuickComputeTypeImpl{
+public abstract class JQuickFlinkComputeTypeImpl extends JQuickComputeTypeImpl{
 
-    public JQuickJavaComputeTypeImpl(){
-        super(new JQuickSparkProvider());
+    public JQuickFlinkComputeTypeImpl(){
+        super(new JQuickFlinkProvider());
     }
 
 }
