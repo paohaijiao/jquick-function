@@ -1,5 +1,7 @@
 package com.github.paohaijiao.provider;
 
+import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,9 +15,7 @@ import java.util.List;
  */
 public interface JQuickFunctionProvider<T, R> extends Serializable {
 
-//    public String getName();
-//
-//    public String getProviderType();
+    public JQuickComputeTypeImpl getType();
 
 
     /**

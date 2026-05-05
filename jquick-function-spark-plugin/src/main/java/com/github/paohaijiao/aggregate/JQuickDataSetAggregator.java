@@ -23,7 +23,7 @@ package com.github.paohaijiao.aggregate;
  * @since 2026/5/4
  */
 
-import com.github.paohaijiao.manage.JQuickFunctionManager;
+import com.github.paohaijiao.manage.JQuickFunctionProviderManager;
 import com.github.paohaijiao.statement.JQuickDataSet;
 
 import java.util.*;
@@ -152,7 +152,7 @@ public class JQuickDataSetAggregator {
                 .withGroupBy(groupByColumns.isEmpty() ? null : new ArrayList<>(groupByColumns))
                 .withAggregations(new LinkedHashMap<>(aggregations))
                 .withResultName(resultName);
-        return JQuickFunctionManager.dispatch(function, dataset);
+        return JQuickFunctionProviderManager.dispatch(function, dataset);
     }
 
     /**
@@ -166,6 +166,6 @@ public class JQuickDataSetAggregator {
                 .withGroupBy(groupByColumns.isEmpty() ? null : new ArrayList<>(groupByColumns))
                 .withAggregations(new LinkedHashMap<>(aggregations))
                 .withResultName(resultName);
-        return JQuickFunctionManager.dispatchAsync(function, dataset);
+        return JQuickFunctionProviderManager.dispatchAsync(function, dataset);
     }
 }

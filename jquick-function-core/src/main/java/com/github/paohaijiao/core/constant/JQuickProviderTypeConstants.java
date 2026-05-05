@@ -13,26 +13,20 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao;
-
-import com.github.paohaijiao.context.JQuickFunctionContext;
-import com.github.paohaijiao.function.JQuickFunction;
-import com.github.paohaijiao.manage.JQuickFunctionProviderManager;
-import org.junit.Test;
+package com.github.paohaijiao.core.constant;
 
 /**
- * packageName com.github.paohaijiao
+ * packageName com.github.paohaijiao.core.constant
  *
  * @author Martin
  * @version 1.0.0
- * @since 2026/5/4
+ * @since 2026/5/5
  */
-public class JQuickCoreTest {
-    @Test
-    public void test(){
-        JQuickFunction<Integer, Integer> function = x -> x * 2;
-        JQuickFunctionContext context = new JQuickFunctionContext();
-        Integer result = JQuickFunctionProviderManager.dispatch(function, 10, context);
-        System.out.println(result);
-    }
+public class JQuickProviderTypeConstants {
+
+    public static final String JAVA ="JAVA";
+
+    public static final String SPARK ="SPARK";
+
+    public static final String Flink ="FLINK";
 }

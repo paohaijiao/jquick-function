@@ -18,7 +18,7 @@ package com.github.paohaijiao;
 import com.github.paohaijiao.context.JQuickFunctionContext;
 import com.github.paohaijiao.function.JQuickFlinkFunction;
 import com.github.paohaijiao.function.JQuickFunction;
-import com.github.paohaijiao.manage.JQuickFunctionManager;
+import com.github.paohaijiao.manage.JQuickFunctionProviderManager;
 import com.github.paohaijiao.wrap.JQuickFunctionWrapper;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -62,7 +62,7 @@ public class JQuickFlinkTest {
         JQuickFunctionContext context = new JQuickFunctionContext();
         context.put(StreamExecutionEnvironment.class, env);
         List<Integer> data = Arrays.asList(1, 2, 3);
-        Object result = JQuickFunctionManager.dispatch((JQuickFunction) function, data, context);
+        Object result = JQuickFunctionProviderManager.dispatch((JQuickFunction) function, data, context);
         System.out.println(result);
     }
     @Test

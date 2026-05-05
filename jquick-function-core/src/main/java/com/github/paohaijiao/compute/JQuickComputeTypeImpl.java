@@ -13,26 +13,28 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao;
+package com.github.paohaijiao.compute;
 
-import com.github.paohaijiao.context.JQuickFunctionContext;
-import com.github.paohaijiao.function.JQuickFunction;
-import com.github.paohaijiao.manage.JQuickFunctionProviderManager;
-import org.junit.Test;
+import com.github.paohaijiao.type.JQuickProviderType;
 
 /**
- * packageName com.github.paohaijiao
+ * packageName com.github.paohaijiao.compute
  *
  * @author Martin
  * @version 1.0.0
- * @since 2026/5/4
+ * @since 2026/5/5
  */
-public class JQuickCoreTest {
-    @Test
-    public void test(){
-        JQuickFunction<Integer, Integer> function = x -> x * 2;
-        JQuickFunctionContext context = new JQuickFunctionContext();
-        Integer result = JQuickFunctionProviderManager.dispatch(function, 10, context);
-        System.out.println(result);
+public abstract  class JQuickComputeTypeImpl implements JQuickComputeType
+{
+    protected JQuickProviderType type;
+
+    public JQuickComputeTypeImpl(JQuickProviderType type){
+        this.type = type;
     }
+    @Override
+    public JQuickProviderType getType() {
+        return type;
+    }
+
+    public abstract String getMethod() ;
 }

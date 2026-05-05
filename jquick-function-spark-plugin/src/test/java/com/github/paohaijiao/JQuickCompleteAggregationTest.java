@@ -16,7 +16,7 @@
 package com.github.paohaijiao;
 
 import com.github.paohaijiao.aggregate.JQuickDataSetAggregator;
-import com.github.paohaijiao.manage.JQuickFunctionManager;
+import com.github.paohaijiao.manage.JQuickFunctionProviderManager;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
 import java.util.Arrays;
@@ -72,7 +72,7 @@ public class JQuickCompleteAggregationTest {
                 .count("employee_id")
                 .execute();
         multiGroup.printTable();
-        JQuickFunctionManager.shutdown();
+        JQuickFunctionProviderManager.shutdown();
     }
 
     private static JQuickDataSet createSampleDataset() {

@@ -17,7 +17,7 @@ package com.github.paohaijiao;
 
 import com.github.paohaijiao.context.JQuickFunctionContext;
 import com.github.paohaijiao.function.JQuickSparkFunction;
-import com.github.paohaijiao.manage.JQuickFunctionManager;
+import com.github.paohaijiao.manage.JQuickFunctionProviderManager;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class JQuickSparkTest {
         JavaSparkContext sc = new JavaSparkContext(conf);
         context.put(JavaSparkContext.class, sc);
         List<Integer> data = Arrays.asList(1, 2, 3);
-        List<Integer> result = JQuickFunctionManager.dispatch(function, data, context);
+        List<Integer> result = JQuickFunctionProviderManager.dispatch(function, data, context);
         System.out.println(result);
     }
 }

@@ -24,7 +24,7 @@ package com.github.paohaijiao;
  */
 
 import com.github.paohaijiao.domain.JQuickDataSetFlinkAggregator;
-import com.github.paohaijiao.manage.JQuickFunctionManager;
+import com.github.paohaijiao.manage.JQuickFunctionProviderManager;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
 
@@ -79,7 +79,7 @@ public class JQuickFlinkAggregationTest {
         JQuickDataSet mapResult = JQuickDataSetFlinkAggregator.on(dataset).aggregations(aggregations).execute();
         mapResult.printTable();
         // 关闭资源
-        JQuickFunctionManager.shutdown();
+        JQuickFunctionProviderManager.shutdown();
     }
 
     private static JQuickDataSet createSampleDataset() {
