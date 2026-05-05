@@ -11,7 +11,6 @@ import java.util.List;
  */
 public interface JQuickAggregationProvider<T, R> extends JQuickFunctionProvider<T, R> {
 
-    public String getAggregateWay();
 
     /**
      * group by 字段

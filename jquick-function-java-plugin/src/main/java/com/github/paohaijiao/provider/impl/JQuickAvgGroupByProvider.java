@@ -15,10 +15,14 @@
  */
 package com.github.paohaijiao.provider.impl;
 
+import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
+import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
+import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
 import com.github.paohaijiao.provider.JQuickGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * packageName com.github.paohaijiao.provider.impl
@@ -52,8 +56,16 @@ public class JQuickAvgGroupByProvider extends JQuickGroupByAggregationProvider<D
         return Double.class;
     }
 
+
     @Override
-    public String getAggregateWay() {
-        return "avg";
+    public JQuickComputeTypeImpl getType() {
+        return new JQuickJavaComputeTypeAvgImpl();
+    }
+    private static class JQuickJavaComputeTypeAvgImpl extends JQuickJavaComputeTypeImpl {
+
+        @Override
+        public String getMethod() {
+            return JQuickProviderMethodConstants.AVG;
+        }
     }
 }

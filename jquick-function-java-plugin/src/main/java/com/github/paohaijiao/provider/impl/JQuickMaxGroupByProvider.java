@@ -14,47 +14,52 @@
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
 package com.github.paohaijiao.provider.impl;
-
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
 import com.github.paohaijiao.provider.JQuickGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
-
 import java.util.List;
+import java.util.Objects;
 
-public class JQuickSumGroupByProvider extends JQuickGroupByAggregationProvider<Double> {
+public class JQuickMaxGroupByProvider extends JQuickGroupByAggregationProvider<Object> {
 
-    private final String sumColumn;  // 要求和的字段
+    private final String maxColumn;
 
-    public JQuickSumGroupByProvider(List<String> groupByColumns, String resultColumnName, String sumColumn) {
+    public JQuickMaxGroupByProvider(List<String> groupByColumns, String resultColumnName, String maxColumn) {
         super(groupByColumns, resultColumnName);
-        this.sumColumn = sumColumn;
+        this.maxColumn = maxColumn;
     }
 
     @Override
-    protected Double aggregateGroup(List<JQuickRow> groupRows) {
+    protected Object aggregateGroup(List<JQuickRow> groupRows) {
         return groupRows.stream()
-                .mapToDouble(row -> {
-                    Number value = row.getAs(sumColumn, Number.class);
-                    return value != null ? value.doubleValue() : 0.0;
+                .map(row -> row.get(maxColumn))
+                .filter(Objects::nonNull)
+                .max((a, b) -> {
+                    if (a instanceof Comparable && b instanceof Comparable) {
+                        return ((Comparable) a).compareTo(b);
+                    }
+                    return a.toString().compareTo(b.toString());
                 })
-                .sum();
+                .orElse(null);
     }
 
     @Override
     protected Class<?> getResultType() {
-        return Double.class;
+        return Object.class;
     }
+
+
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickSumGroupByProvider.JQuickJavaComputeTypeSumImpl();
+        return new JQuickJavaComputeTypeMaxImpl();
     }
-    private static class JQuickJavaComputeTypeSumImpl extends JQuickJavaComputeTypeImpl {
+    private static class JQuickJavaComputeTypeMaxImpl extends JQuickJavaComputeTypeImpl {
 
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.SUM;
+            return JQuickProviderMethodConstants.MAX;
         }
     }
 }

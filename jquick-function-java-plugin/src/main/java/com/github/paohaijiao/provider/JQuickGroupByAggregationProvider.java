@@ -42,10 +42,6 @@ public abstract class JQuickGroupByAggregationProvider<R> implements JQuickAggre
         return groupByColumns;
     }
 
-    @Override
-    public String getAggregateWay() {
-        return "aggregate";
-    }
 
     @Override
     public JQuickDataSet apply(List<JQuickRow> rows) {

@@ -15,6 +15,9 @@
  */
 package com.github.paohaijiao.provider.impl;
 
+import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
+import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
+import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
 import com.github.paohaijiao.provider.JQuickGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 
@@ -44,7 +47,17 @@ public class JQuickCountGroupByProvider extends JQuickGroupByAggregationProvider
     }
 
     @Override
-    public String getAggregateWay() {
-        return "count";
+    public JQuickComputeTypeImpl getType() {
+        return new JQuickJavaComputeTypeCountImpl();
     }
+
+    private static class JQuickJavaComputeTypeCountImpl extends JQuickJavaComputeTypeImpl {
+
+        @Override
+        public String getMethod() {
+            return JQuickProviderMethodConstants.COUNT;
+        }
+    }
+
+
 }
