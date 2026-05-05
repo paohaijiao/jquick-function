@@ -325,7 +325,6 @@ public class JQuickFunctionWrapper<I, O> implements JQuickFunction<I, O> {
             if (inputValidator != null || outputValidator != null) {
                 result = validated(result, inputValidator, outputValidator);
             }
-
             return result;
         }
     }
