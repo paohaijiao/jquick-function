@@ -113,7 +113,7 @@ public abstract class JQuickSparkGroupByAggregationProvider<R> implements JQuick
         for (String col : groupByColumns) {
             columns.add(new JQuickColumnMeta(col, String.class, "group_by"));
         }
-        columns.add(new JQuickColumnMeta(resultColumnName, getResultType(), "aggregation"));
+        columns.add(new JQuickColumnMeta(resultColumnName, Object.class, "aggregation"));
         return columns;
     }
 }
