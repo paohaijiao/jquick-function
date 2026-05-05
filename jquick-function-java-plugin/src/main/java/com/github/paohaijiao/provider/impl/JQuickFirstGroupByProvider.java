@@ -19,11 +19,11 @@ package com.github.paohaijiao.provider.impl;
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickGroupByAggregationProvider;
+import com.github.paohaijiao.provider.JQuickJavaGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import java.util.List;
 
-public class JQuickFirstGroupByProvider extends JQuickGroupByAggregationProvider<Object> {
+public class JQuickFirstGroupByProvider extends JQuickJavaGroupByAggregationProvider<Object> {
 
     private final String firstColumn;
 

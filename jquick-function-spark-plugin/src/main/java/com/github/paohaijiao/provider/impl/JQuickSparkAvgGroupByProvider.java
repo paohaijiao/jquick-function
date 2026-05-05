@@ -14,54 +14,40 @@
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
 package com.github.paohaijiao.provider.impl;
-
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickJavaGroupByAggregationProvider;
-import com.github.paohaijiao.statement.JQuickRow;
+import com.github.paohaijiao.provider.JQuickSparkGroupByAggregationProvider;
+import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
 
 import java.util.List;
 
-/**
- * packageName com.github.paohaijiao.provider.impl
- *
- * @author Martin
- * @version 1.0.0
- * @since 2026/5/5
- */
-public class JQuickAvgGroupByProvider extends JQuickJavaGroupByAggregationProvider<Double> {
+import static org.apache.spark.sql.functions.*;
+
+public class JQuickSparkAvgGroupByProvider extends JQuickSparkGroupByAggregationProvider<Double> {
 
     private final String avgColumn;
 
-    public JQuickAvgGroupByProvider(List<String> groupByColumns, String resultColumnName, String avgColumn) {
-        super(groupByColumns, resultColumnName);
+    public JQuickSparkAvgGroupByProvider(List<String> groupByColumns, String resultColumnName, String avgColumn, SparkSession spark) {
+        super(groupByColumns, resultColumnName, spark);
         this.avgColumn = avgColumn;
     }
 
     @Override
-    protected Double aggregateGroup(List<JQuickRow> groupRows) {
-        return groupRows.stream()
-                .mapToDouble(row -> {
-                    Number value = row.getAs(avgColumn, Number.class);
-                    return value != null ? value.doubleValue() : 0.0;
-                })
-                .average()
-                .orElse(0.0);
+    protected Dataset<Row> doAggregate(Dataset<Row> df) {
+        Column[] groupCols = groupByColumns.stream()
+                .map(functions::col)
+                .toArray(Column[]::new);
+        return df.groupBy(groupCols).agg(avg(col(avgColumn)).alias(resultColumnName));
     }
-
-    @Override
-    protected Class<?> getResultType() {
-        return Double.class;
-    }
-
 
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickJavaComputeTypeAvgImpl();
+        return new JQuickSparkComputeTypeSumImpl();
     }
-    private static class JQuickJavaComputeTypeAvgImpl extends JQuickJavaComputeTypeImpl {
-
+    private static class JQuickSparkComputeTypeSumImpl extends JQuickJavaComputeTypeImpl {
         @Override
         public String getMethod() {
             return JQuickProviderMethodConstants.AVG;

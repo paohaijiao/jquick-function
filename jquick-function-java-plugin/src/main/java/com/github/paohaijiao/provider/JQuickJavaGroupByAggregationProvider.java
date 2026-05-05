@@ -26,13 +26,13 @@ import java.util.*;
  *
  * @param <R> 聚合结果类型
  */
-public abstract class JQuickGroupByAggregationProvider<R> implements JQuickAggregationProvider<JQuickRow, JQuickDataSet> {
+public abstract class JQuickJavaGroupByAggregationProvider<R> implements JQuickAggregationProvider<JQuickRow, JQuickDataSet> {
 
     protected final List<String> groupByColumns;
 
     protected final String resultColumnName;
 
-    public JQuickGroupByAggregationProvider(List<String> groupByColumns, String resultColumnName) {
+    public JQuickJavaGroupByAggregationProvider(List<String> groupByColumns, String resultColumnName) {
         this.groupByColumns = groupByColumns;
         this.resultColumnName = resultColumnName;
     }

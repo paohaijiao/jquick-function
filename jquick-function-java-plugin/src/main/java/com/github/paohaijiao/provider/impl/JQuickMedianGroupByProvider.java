@@ -18,13 +18,13 @@ package com.github.paohaijiao.provider.impl;
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickGroupByAggregationProvider;
+import com.github.paohaijiao.provider.JQuickJavaGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class JQuickMedianGroupByProvider extends JQuickGroupByAggregationProvider<Double> {
+public class JQuickMedianGroupByProvider extends JQuickJavaGroupByAggregationProvider<Double> {
 
     private final String medianColumn;
 

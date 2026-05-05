@@ -18,7 +18,7 @@ package com.github.paohaijiao.provider.impl;
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickGroupByAggregationProvider;
+import com.github.paohaijiao.provider.JQuickJavaGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 2026/5/5
  */
-public class JQuickCountGroupByProvider extends JQuickGroupByAggregationProvider<Long> {
+public class JQuickCountGroupByProvider extends JQuickJavaGroupByAggregationProvider<Long> {
 
     public JQuickCountGroupByProvider(List<String> groupByColumns, String resultColumnName) {
         super(groupByColumns, resultColumnName);

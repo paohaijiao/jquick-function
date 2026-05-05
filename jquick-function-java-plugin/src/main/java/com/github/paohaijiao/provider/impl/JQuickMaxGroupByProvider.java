@@ -17,12 +17,12 @@ package com.github.paohaijiao.provider.impl;
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickGroupByAggregationProvider;
+import com.github.paohaijiao.provider.JQuickJavaGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import java.util.List;
 import java.util.Objects;
 
-public class JQuickMaxGroupByProvider extends JQuickGroupByAggregationProvider<Object> {
+public class JQuickMaxGroupByProvider extends JQuickJavaGroupByAggregationProvider<Object> {
 
     private final String maxColumn;
 

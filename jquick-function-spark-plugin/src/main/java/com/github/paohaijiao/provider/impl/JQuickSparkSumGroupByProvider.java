@@ -15,43 +15,49 @@
  */
 package com.github.paohaijiao.provider.impl;
 
+/**
+ * packageName com.github.paohaijiao.provider.impl
+ *
+ * @author Martin
+ * @version 1.0.0
+ * @since 2026/5/5
+ */
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickJavaGroupByAggregationProvider;
-import com.github.paohaijiao.statement.JQuickRow;
-
+import com.github.paohaijiao.provider.JQuickSparkGroupByAggregationProvider;
+import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
 import java.util.List;
 
-public class JQuickSumGroupByProvider extends JQuickJavaGroupByAggregationProvider<Double> {
+import static org.apache.spark.sql.functions.*;
 
-    private final String sumColumn;  // 要求和的字段
+/**
+ * Spark分布式求和聚合器
+ */
+public class JQuickSparkSumGroupByProvider extends JQuickSparkGroupByAggregationProvider<Double> {
 
-    public JQuickSumGroupByProvider(List<String> groupByColumns, String resultColumnName, String sumColumn) {
-        super(groupByColumns, resultColumnName);
+    private final String sumColumn;
+
+    public JQuickSparkSumGroupByProvider(List<String> groupByColumns, String resultColumnName, String sumColumn, SparkSession spark) {
+        super(groupByColumns, resultColumnName, spark);
         this.sumColumn = sumColumn;
     }
 
     @Override
-    protected Double aggregateGroup(List<JQuickRow> groupRows) {
-        return groupRows.stream()
-                .mapToDouble(row -> {
-                    Number value = row.getAs(sumColumn, Number.class);
-                    return value != null ? value.doubleValue() : 0.0;
-                })
-                .sum();
+    protected Dataset<Row> doAggregate(Dataset<Row> df) {
+        Column[] groupCols = groupByColumns.stream()
+                .map(functions::col)
+                .toArray(Column[]::new);
+        return df.groupBy(groupCols).agg(sum(col(sumColumn)).alias(resultColumnName));
     }
 
-    @Override
-    protected Class<?> getResultType() {
-        return Double.class;
-    }
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickSumGroupByProvider.JQuickJavaComputeTypeSumImpl();
+        return new JQuickSparkComputeTypeSumImpl();
     }
-    private static class JQuickJavaComputeTypeSumImpl extends JQuickJavaComputeTypeImpl {
-
+    private static class JQuickSparkComputeTypeSumImpl extends JQuickJavaComputeTypeImpl {
         @Override
         public String getMethod() {
             return JQuickProviderMethodConstants.SUM;
