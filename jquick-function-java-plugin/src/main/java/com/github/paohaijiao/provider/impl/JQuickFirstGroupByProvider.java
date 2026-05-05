@@ -52,7 +52,7 @@ public class JQuickFirstGroupByProvider extends JQuickGroupByAggregationProvider
     private static class JQuickJavaComputeTypeFirstImpl extends JQuickJavaComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.SUM;
+            return JQuickProviderMethodConstants.FIRST;
         }
     }
 }

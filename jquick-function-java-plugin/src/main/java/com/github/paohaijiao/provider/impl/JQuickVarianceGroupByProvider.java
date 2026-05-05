@@ -70,7 +70,7 @@ public class JQuickVarianceGroupByProvider extends JQuickGroupByAggregationProvi
     private static class JQuickJavaComputeTypeVarianceImpl extends JQuickJavaComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.STDDEV;
+            return JQuickProviderMethodConstants.VARIANCE;
         }
     }
 }
