@@ -77,6 +77,7 @@ public abstract class JQuickBaseStandardProvider<R> implements JStandardProvider
      */
     protected abstract R transform(List<Object> values);
 
+
     /**
      * 当输入值为 null 或空时的处理策略
      * 子类可覆盖此方法自定义行为

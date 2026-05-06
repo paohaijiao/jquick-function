@@ -13,12 +13,19 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
+package com.github.paohaijiao.provider.aggregate.impl;
 
+/**
+ * packageName com.github.paohaijiao.provider.impl
+ *
+ * @author Martin
+ * @version 1.0.0
+ * @since 2026/5/5
+ */
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickFlinkComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickFlinkGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickFlinkGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
@@ -30,15 +37,15 @@ import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import java.util.List;
 
 /**
- * Flink 分布式获取最后一个值聚合器
+ * Flink 分布式获取第一个值聚合器
  */
-public class JQuickFlinkLastGroupByProvider extends JQuickFlinkGroupByAggregationProvider<Object> {
+public class JQuickFlinkFirstGroupByProvider extends JQuickFlinkGroupByAggregationProvider<Object> {
 
-    private final String lastColumn;
+    private final String firstColumn;
 
-    public JQuickFlinkLastGroupByProvider(List<String> groupByColumns, String resultColumnName, String lastColumn, ExecutionEnvironment env, StreamTableEnvironment tableEnv) {
+    public JQuickFlinkFirstGroupByProvider(List<String> groupByColumns, String resultColumnName, String firstColumn, ExecutionEnvironment env, StreamTableEnvironment tableEnv) {
         super(groupByColumns, resultColumnName, env, tableEnv);
-        this.lastColumn = lastColumn;
+        this.firstColumn = firstColumn;
     }
 
     @Override
@@ -47,20 +54,20 @@ public class JQuickFlinkLastGroupByProvider extends JQuickFlinkGroupByAggregatio
             @Override
             public Tuple2<String, Object> map(JQuickRow row) throws Exception {
                 String key = createGroupKey(row);
-                Object value = row.get(lastColumn);
+                Object value = row.get(firstColumn);
                 return new Tuple2<>(key, value);
             }
         });
 
-        // 使用 reduce 保留最后一个值
+        // 使用 reduce 保留第一个值
         DataSet<Tuple2<String, Object>> reduced = mapped
                 .groupBy(0)
                 .reduce(new ReduceFunction<Tuple2<String, Object>>() {
                     @Override
                     public Tuple2<String, Object> reduce(Tuple2<String, Object> t1,
                                                          Tuple2<String, Object> t2) throws Exception {
-                        // 保留最后一个
-                        return t2;
+                        // 保留第一个，忽略第二个
+                        return t1;
                     }
                 });
 
@@ -79,14 +86,15 @@ public class JQuickFlinkLastGroupByProvider extends JQuickFlinkGroupByAggregatio
         return Object.class;
     }
 
+
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickFlinkComputeTypeLastImpl();
+        return new JQuickFlinkComputeTypeFirstImpl();
     }
-    private static class JQuickFlinkComputeTypeLastImpl extends JQuickFlinkComputeTypeImpl {
+    private static class JQuickFlinkComputeTypeFirstImpl extends JQuickFlinkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.LAST;
+            return JQuickProviderMethodConstants.FIRST;
         }
     }
 }

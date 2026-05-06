@@ -13,12 +13,12 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
+package com.github.paohaijiao.provider.aggregate.impl;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickFlinkComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickFlinkGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickFlinkGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import org.apache.flink.api.common.functions.GroupReduceFunction;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -31,25 +31,20 @@ import org.apache.flink.util.Collector;
 import java.util.List;
 
 /**
- * Flink 分布式方差聚合器
+ * Flink 分布式标准差聚合器
  */
-public class JQuickFlinkVarianceGroupByProvider extends JQuickFlinkGroupByAggregationProvider<Double> {
+public class JQuickFlinkStdDevGroupByProvider extends JQuickFlinkGroupByAggregationProvider<Double> {
 
-    private final String varianceColumn;
+    private final String stddevColumn;
     private final boolean isSample;
 
-    public JQuickFlinkVarianceGroupByProvider(List<String> groupByColumns, String resultColumnName, String varianceColumn, ExecutionEnvironment env, StreamTableEnvironment tableEnv) {
-        this(groupByColumns, resultColumnName, varianceColumn, false, env, tableEnv);
+    public JQuickFlinkStdDevGroupByProvider(List<String> groupByColumns, String resultColumnName, String stddevColumn, ExecutionEnvironment env, StreamTableEnvironment tableEnv) {
+        this(groupByColumns, resultColumnName, stddevColumn, false, env, tableEnv);
     }
 
-    public JQuickFlinkVarianceGroupByProvider(List<String> groupByColumns,
-                                              String resultColumnName,
-                                              String varianceColumn,
-                                              boolean isSample,
-                                              ExecutionEnvironment env,
-                                              StreamTableEnvironment tableEnv) {
+    public JQuickFlinkStdDevGroupByProvider(List<String> groupByColumns, String resultColumnName, String stddevColumn, boolean isSample, ExecutionEnvironment env, StreamTableEnvironment tableEnv) {
         super(groupByColumns, resultColumnName, env, tableEnv);
-        this.varianceColumn = varianceColumn;
+        this.stddevColumn = stddevColumn;
         this.isSample = isSample;
     }
 
@@ -61,7 +56,7 @@ public class JQuickFlinkVarianceGroupByProvider extends JQuickFlinkGroupByAggreg
                     @Override
                     public Tuple4<String, Double, Double, Integer> map(JQuickRow row) throws Exception {
                         String key = createGroupKey(row);
-                        Number value = row.getAs(varianceColumn, Number.class);
+                        Number value = row.getAs(stddevColumn, Number.class);
                         double num = value != null ? value.doubleValue() : 0.0;
                         return new Tuple4<>(key, num, num * num, 1);
                     }
@@ -91,7 +86,7 @@ public class JQuickFlinkVarianceGroupByProvider extends JQuickFlinkGroupByAggreg
                     }
                 });
 
-        // 计算方差
+        // 计算标准差
         return reduced.map(new MapFunction<Tuple4<String, Double, Double, Integer>, JQuickRow>() {
             @Override
             public JQuickRow map(Tuple4<String, Double, Double, Integer> tuple) throws Exception {
@@ -100,17 +95,19 @@ public class JQuickFlinkVarianceGroupByProvider extends JQuickFlinkGroupByAggreg
                 double sumSq = tuple.f2;
                 int count = tuple.f3;
 
-                double variance = 0.0;
+                double stddev = 0.0;
                 if (count > 0) {
                     double mean = sum / count;
+                    double variance;
                     if (isSample && count > 1) {
                         variance = (sumSq - sum * sum / count) / (count - 1);
                     } else {
                         variance = (sumSq - sum * sum / count) / count;
                     }
+                    stddev = Math.sqrt(variance);
                 }
 
-                result.put(resultColumnName, variance);
+                result.put(resultColumnName, stddev);
                 return result;
             }
         });
@@ -125,12 +122,12 @@ public class JQuickFlinkVarianceGroupByProvider extends JQuickFlinkGroupByAggreg
 
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickFlinkComputeTypeVarianceImpl();
+        return new JQuickFlinkComputeTypeStdImpl();
     }
-    private static class JQuickFlinkComputeTypeVarianceImpl extends JQuickFlinkComputeTypeImpl {
+    private static class JQuickFlinkComputeTypeStdImpl extends JQuickFlinkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.VARIANCE;
+            return JQuickProviderMethodConstants.STDDEV;
         }
     }
 }

@@ -13,12 +13,20 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
+package com.github.paohaijiao.provider.aggregate.impl;
+
+/**
+ * packageName com.github.paohaijiao.provider
+ *
+ * @author Martin
+ * @version 1.0.0
+ * @since 2026/5/5
+ */
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickFlinkComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickFlinkGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickFlinkGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
@@ -30,51 +38,48 @@ import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import java.util.List;
 
 /**
- * Flink 分布式最小值聚合器
+ * Flink 分布式求和聚合器
+ * 按分组字段对指定列进行求和
+ *
+ * @author Martin
+ * @version 1.0.0
+ * @since 2026/1/9
  */
-public class JQuickFlinkMinGroupByProvider extends JQuickFlinkGroupByAggregationProvider<Object> {
+public class JQuickFlinkSumGroupByProvider extends JQuickFlinkGroupByAggregationProvider<Double> {
 
-    private final String minColumn;
+    private final String sumColumn;
 
-    public JQuickFlinkMinGroupByProvider(List<String> groupByColumns, String resultColumnName, String minColumn, ExecutionEnvironment env, StreamTableEnvironment tableEnv) {
+    public JQuickFlinkSumGroupByProvider(List<String> groupByColumns, String resultColumnName, String sumColumn, ExecutionEnvironment env, StreamTableEnvironment tableEnv) {
         super(groupByColumns, resultColumnName, env, tableEnv);
-        this.minColumn = minColumn;
+        this.sumColumn = sumColumn;
     }
 
     @Override
     protected DataSet<JQuickRow> doAggregate(DataSet<JQuickRow> dataSet) throws Exception {
-        DataSet<Tuple2<String, Object>> mapped = dataSet.map(new MapFunction<JQuickRow, Tuple2<String, Object>>() {
+        //将JQuickRow 转换为 Tuple2<分组键, 求和值>
+        DataSet<Tuple2<String, Double>> mapped = dataSet.map(new MapFunction<JQuickRow, Tuple2<String, Double>>() {
             @Override
-            public Tuple2<String, Object> map(JQuickRow row) throws Exception {
+            public Tuple2<String, Double> map(JQuickRow row) throws Exception {
                 String key = createGroupKey(row);
-                Object value = row.get(minColumn);
-                return new Tuple2<>(key, value);
+                Number value = row.getAs(sumColumn, Number.class);
+                double num = value != null ? value.doubleValue() : 0.0;
+                return new Tuple2<>(key, num);
             }
         });
-
-        DataSet<Tuple2<String, Object>> reduced = mapped
+        //按分组键进行求和聚合
+        DataSet<Tuple2<String, Double>> reduced = mapped
                 .groupBy(0)
-                .reduce(new ReduceFunction<Tuple2<String, Object>>() {
+                .reduce(new ReduceFunction<Tuple2<String, Double>>() {
                     @Override
-                    public Tuple2<String, Object> reduce(Tuple2<String, Object> t1,
-                                                         Tuple2<String, Object> t2) throws Exception {
-                        Object v1 = t1.f1;
-                        Object v2 = t2.f1;
-
-                        if (v1 == null) return t2;
-                        if (v2 == null) return t1;
-
-                        if (v1 instanceof Comparable && v2 instanceof Comparable) {
-                            int cmp = ((Comparable) v1).compareTo(v2);
-                            return cmp <= 0 ? t1 : t2;
-                        }
-                        return t1;
+                    public Tuple2<String, Double> reduce(Tuple2<String, Double> t1, Tuple2<String, Double> t2) throws Exception {
+                        return new Tuple2<>(t1.f0, t1.f1 + t2.f1);
                     }
                 });
 
-        return reduced.map(new MapFunction<Tuple2<String, Object>, JQuickRow>() {
+        // 将Tuple2 转换回 JQuickRow
+        return reduced.map(new MapFunction<Tuple2<String, Double>, JQuickRow>() {
             @Override
-            public JQuickRow map(Tuple2<String, Object> tuple) throws Exception {
+            public JQuickRow map(Tuple2<String, Double> tuple) throws Exception {
                 JQuickRow result = parseGroupKey(tuple.f0, null);
                 result.put(resultColumnName, tuple.f1);
                 return result;
@@ -84,18 +89,18 @@ public class JQuickFlinkMinGroupByProvider extends JQuickFlinkGroupByAggregation
 
     @Override
     protected Class<?> getResultType() {
-        return Object.class;
+        return Double.class;
     }
 
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickFlinkComputeTypeMinImpl();
+        return new JQuickFlinkComputeTypeSumImpl();
     }
 
-    private static class JQuickFlinkComputeTypeMinImpl extends JQuickFlinkComputeTypeImpl {
+    private static class JQuickFlinkComputeTypeSumImpl extends JQuickFlinkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.MIN;
+            return JQuickProviderMethodConstants.SUM;
         }
     }
 }

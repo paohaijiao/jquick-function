@@ -13,19 +13,13 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
+package com.github.paohaijiao.provider.aggregate.impl;
 
-/**
- * packageName com.github.paohaijiao.provider.impl
- *
- * @author Martin
- * @version 1.0.0
- * @since 2026/5/5
- */
+
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickFlinkComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickFlinkGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickFlinkGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
@@ -37,45 +31,42 @@ import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import java.util.List;
 
 /**
- * Flink 分布式获取第一个值聚合器
+ * Flink 分布式计数聚合器
  */
-public class JQuickFlinkFirstGroupByProvider extends JQuickFlinkGroupByAggregationProvider<Object> {
+public class JQuickFlinkCountGroupByProvider extends JQuickFlinkGroupByAggregationProvider<Long> {
 
-    private final String firstColumn;
-
-    public JQuickFlinkFirstGroupByProvider(List<String> groupByColumns, String resultColumnName, String firstColumn, ExecutionEnvironment env, StreamTableEnvironment tableEnv) {
+    public JQuickFlinkCountGroupByProvider(List<String> groupByColumns, String resultColumnName, ExecutionEnvironment env, StreamTableEnvironment tableEnv) {
         super(groupByColumns, resultColumnName, env, tableEnv);
-        this.firstColumn = firstColumn;
     }
 
     @Override
     protected DataSet<JQuickRow> doAggregate(DataSet<JQuickRow> dataSet) throws Exception {
-        DataSet<Tuple2<String, Object>> mapped = dataSet.map(new MapFunction<JQuickRow, Tuple2<String, Object>>() {
+        // 转换为 Tuple2<分组键, 1>
+        DataSet<Tuple2<String, Integer>> mapped = dataSet.map(new MapFunction<JQuickRow, Tuple2<String, Integer>>() {
             @Override
-            public Tuple2<String, Object> map(JQuickRow row) throws Exception {
+            public Tuple2<String, Integer> map(JQuickRow row) throws Exception {
                 String key = createGroupKey(row);
-                Object value = row.get(firstColumn);
-                return new Tuple2<>(key, value);
+                return new Tuple2<>(key, 1);
             }
         });
 
-        // 使用 reduce 保留第一个值
-        DataSet<Tuple2<String, Object>> reduced = mapped
+        // 分组求和计数
+        DataSet<Tuple2<String, Integer>> reduced = mapped
                 .groupBy(0)
-                .reduce(new ReduceFunction<Tuple2<String, Object>>() {
+                .reduce(new ReduceFunction<Tuple2<String, Integer>>() {
                     @Override
-                    public Tuple2<String, Object> reduce(Tuple2<String, Object> t1,
-                                                         Tuple2<String, Object> t2) throws Exception {
-                        // 保留第一个，忽略第二个
-                        return t1;
+                    public Tuple2<String, Integer> reduce(Tuple2<String, Integer> t1,
+                                                          Tuple2<String, Integer> t2) throws Exception {
+                        return new Tuple2<>(t1.f0, t1.f1 + t2.f1);
                     }
                 });
 
-        return reduced.map(new MapFunction<Tuple2<String, Object>, JQuickRow>() {
+        // 转换回 JQuickRow
+        return reduced.map(new MapFunction<Tuple2<String, Integer>, JQuickRow>() {
             @Override
-            public JQuickRow map(Tuple2<String, Object> tuple) throws Exception {
+            public JQuickRow map(Tuple2<String, Integer> tuple) throws Exception {
                 JQuickRow result = parseGroupKey(tuple.f0, null);
-                result.put(resultColumnName, tuple.f1);
+                result.put(resultColumnName, (long) tuple.f1);
                 return result;
             }
         });
@@ -83,18 +74,17 @@ public class JQuickFlinkFirstGroupByProvider extends JQuickFlinkGroupByAggregati
 
     @Override
     protected Class<?> getResultType() {
-        return Object.class;
+        return Long.class;
     }
 
-
-    @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickFlinkComputeTypeFirstImpl();
+        return new JQuickFlinkComputeTypeCountImpl();
     }
-    private static class JQuickFlinkComputeTypeFirstImpl extends JQuickFlinkComputeTypeImpl {
+
+    private static class JQuickFlinkComputeTypeCountImpl extends JQuickFlinkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.FIRST;
+            return JQuickProviderMethodConstants.COUNT;
         }
     }
 }

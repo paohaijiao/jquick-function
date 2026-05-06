@@ -13,7 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
+package com.github.paohaijiao.provider.aggregate.impl;
 
 /**
  * packageName com.github.paohaijiao.provider.impl
@@ -25,7 +25,7 @@ package com.github.paohaijiao.provider.impl;
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickFlinkComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickFlinkGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickFlinkGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import org.apache.flink.api.common.functions.GroupReduceFunction;
 import org.apache.flink.api.common.functions.MapFunction;
