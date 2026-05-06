@@ -13,53 +13,48 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
-
-/**
- * packageName com.github.paohaijiao.provider.impl
- *
- * @author Martin
- * @version 1.0.0
- * @since 2026/5/5
- */
+package com.github.paohaijiao.provider.aggregate.impl;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickJavaGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickJavaGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
+
 import java.util.List;
 
-public class JQuickLastGroupByProvider extends JQuickJavaGroupByAggregationProvider<Object> {
+public class JQuickSumGroupByProvider extends JQuickJavaGroupByAggregationProvider<Double> {
 
-    private final String lastColumn;
+    private final String sumColumn;  // 要求和的字段
 
-    public JQuickLastGroupByProvider(List<String> groupByColumns, String resultColumnName, String lastColumn) {
+    public JQuickSumGroupByProvider(List<String> groupByColumns, String resultColumnName, String sumColumn) {
         super(groupByColumns, resultColumnName);
-        this.lastColumn = lastColumn;
+        this.sumColumn = sumColumn;
     }
 
     @Override
-    protected Object aggregateGroup(List<JQuickRow> groupRows) {
-        if (groupRows == null || groupRows.isEmpty()) {
-            return null;
-        }
-        return groupRows.get(groupRows.size() - 1).get(lastColumn);
+    protected Double aggregateGroup(List<JQuickRow> groupRows) {
+        return groupRows.stream()
+                .mapToDouble(row -> {
+                    Number value = row.getAs(sumColumn, Number.class);
+                    return value != null ? value.doubleValue() : 0.0;
+                })
+                .sum();
     }
 
     @Override
     protected Class<?> getResultType() {
-        return Object.class;
+        return Double.class;
     }
-
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickJavaComputeTypeLastImpl();
+        return new JQuickSumGroupByProvider.JQuickJavaComputeTypeSumImpl();
     }
-    private static class JQuickJavaComputeTypeLastImpl extends JQuickJavaComputeTypeImpl {
+    private static class JQuickJavaComputeTypeSumImpl extends JQuickJavaComputeTypeImpl {
+
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.LAST;
+            return JQuickProviderMethodConstants.SUM;
         }
     }
 }

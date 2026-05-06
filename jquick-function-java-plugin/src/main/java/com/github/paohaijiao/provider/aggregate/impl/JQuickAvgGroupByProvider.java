@@ -13,46 +13,58 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
-
+package com.github.paohaijiao.provider.aggregate.impl;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickJavaGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickJavaGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
+
 import java.util.List;
 
-public class JQuickFirstGroupByProvider extends JQuickJavaGroupByAggregationProvider<Object> {
+/**
+ * packageName com.github.paohaijiao.provider.impl
+ *
+ * @author Martin
+ * @version 1.0.0
+ * @since 2026/5/5
+ */
+public class JQuickAvgGroupByProvider extends JQuickJavaGroupByAggregationProvider<Double> {
 
-    private final String firstColumn;
+    private final String avgColumn;
 
-    public JQuickFirstGroupByProvider(List<String> groupByColumns, String resultColumnName, String firstColumn) {
+    public JQuickAvgGroupByProvider(List<String> groupByColumns, String resultColumnName, String avgColumn) {
         super(groupByColumns, resultColumnName);
-        this.firstColumn = firstColumn;
+        this.avgColumn = avgColumn;
     }
 
     @Override
-    protected Object aggregateGroup(List<JQuickRow> groupRows) {
-        if (groupRows == null || groupRows.isEmpty()) {
-            return null;
-        }
-        return groupRows.get(0).get(firstColumn);
+    protected Double aggregateGroup(List<JQuickRow> groupRows) {
+        return groupRows.stream()
+                .mapToDouble(row -> {
+                    Number value = row.getAs(avgColumn, Number.class);
+                    return value != null ? value.doubleValue() : 0.0;
+                })
+                .average()
+                .orElse(0.0);
     }
 
     @Override
     protected Class<?> getResultType() {
-        return Object.class;
+        return Double.class;
     }
+
 
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickJavaComputeTypeFirstImpl();
+        return new JQuickJavaComputeTypeAvgImpl();
     }
-    private static class JQuickJavaComputeTypeFirstImpl extends JQuickJavaComputeTypeImpl {
+    private static class JQuickJavaComputeTypeAvgImpl extends JQuickJavaComputeTypeImpl {
+
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.FIRST;
+            return JQuickProviderMethodConstants.AVG;
         }
     }
 }

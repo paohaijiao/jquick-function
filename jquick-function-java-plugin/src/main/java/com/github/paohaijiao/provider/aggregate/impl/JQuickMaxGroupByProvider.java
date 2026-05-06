@@ -13,58 +13,53 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
-
+package com.github.paohaijiao.provider.aggregate.impl;
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickJavaGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickJavaGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
-
 import java.util.List;
+import java.util.Objects;
 
-/**
- * packageName com.github.paohaijiao.provider.impl
- *
- * @author Martin
- * @version 1.0.0
- * @since 2026/5/5
- */
-public class JQuickAvgGroupByProvider extends JQuickJavaGroupByAggregationProvider<Double> {
+public class JQuickMaxGroupByProvider extends JQuickJavaGroupByAggregationProvider<Object> {
 
-    private final String avgColumn;
+    private final String maxColumn;
 
-    public JQuickAvgGroupByProvider(List<String> groupByColumns, String resultColumnName, String avgColumn) {
+    public JQuickMaxGroupByProvider(List<String> groupByColumns, String resultColumnName, String maxColumn) {
         super(groupByColumns, resultColumnName);
-        this.avgColumn = avgColumn;
+        this.maxColumn = maxColumn;
     }
 
     @Override
-    protected Double aggregateGroup(List<JQuickRow> groupRows) {
+    protected Object aggregateGroup(List<JQuickRow> groupRows) {
         return groupRows.stream()
-                .mapToDouble(row -> {
-                    Number value = row.getAs(avgColumn, Number.class);
-                    return value != null ? value.doubleValue() : 0.0;
+                .map(row -> row.get(maxColumn))
+                .filter(Objects::nonNull)
+                .max((a, b) -> {
+                    if (a instanceof Comparable && b instanceof Comparable) {
+                        return ((Comparable) a).compareTo(b);
+                    }
+                    return a.toString().compareTo(b.toString());
                 })
-                .average()
-                .orElse(0.0);
+                .orElse(null);
     }
 
     @Override
     protected Class<?> getResultType() {
-        return Double.class;
+        return Object.class;
     }
 
 
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickJavaComputeTypeAvgImpl();
+        return new JQuickJavaComputeTypeMaxImpl();
     }
-    private static class JQuickJavaComputeTypeAvgImpl extends JQuickJavaComputeTypeImpl {
+    private static class JQuickJavaComputeTypeMaxImpl extends JQuickJavaComputeTypeImpl {
 
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.AVG;
+            return JQuickProviderMethodConstants.MAX;
         }
     }
 }

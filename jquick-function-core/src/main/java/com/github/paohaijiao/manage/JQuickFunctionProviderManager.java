@@ -57,7 +57,7 @@ public class JQuickFunctionProviderManager {
         PROVIDER_TYPE_MAP.put(COMPUTE_TYPE_FLINK, new JQuickFlinkProvider());
     }
 
-    private final Map<String, List<JQuickFunctionProvider<?, ?>>> functionProviderCache = new ConcurrentHashMap<>();
+    private final Map<String, List<JQuickFunctionProvider>> functionProviderCache = new ConcurrentHashMap<>();
 
     private final Map<String, Map<String, JQuickFunctionProvider<?, ?>>> methodCache = new ConcurrentHashMap<>();
 
@@ -99,7 +99,7 @@ public class JQuickFunctionProviderManager {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public List<JQuickFunctionProvider> loadProvidersByComputeType(String computeType) {
-        return (List<JQuickFunctionProvider>) functionProviderCache.computeIfAbsent(computeType, key -> {
+        return functionProviderCache.computeIfAbsent(computeType, key -> {
             List<JQuickFunctionProvider> allProviders = loadAllProviders();
             return allProviders.stream()
                     .filter(provider -> matchesComputeType(provider, computeType))
@@ -580,7 +580,7 @@ public class JQuickFunctionProviderManager {
                 if (computeTypeImpl != null) {
                     method = computeTypeImpl.getMethod();
                 }
-                System.out.printf("  %d. %s (方法: %s, 优先级: %d)%n", i + 1, provider.getClass().getSimpleName(), method, priority);
+               // System.out.printf("  %d. %s (方法: %s, 优先级: %d)%n", i + 1, provider.getClass().getSimpleName(), method, priority);
             }
         }
         System.out.println("====================================================");
@@ -607,17 +607,17 @@ public class JQuickFunctionProviderManager {
         return !loadProvidersByComputeType(computeType).isEmpty();
     }
 
-    /**
-     * 获取提供者数量统计
-     */
-    public Map<String, Integer> getProviderStatistics() {
-        Map<String, Integer> stats = new LinkedHashMap<>();
-        stats.put(COMPUTE_TYPE_JAVA, getJavaProviders().size());
-        stats.put(COMPUTE_TYPE_SPARK, getSparkProviders().size());
-        stats.put(COMPUTE_TYPE_FLINK, getFlinkProviders().size());
-        stats.put("TOTAL", loadAllProviders().size());
-        return stats;
-    }
+//    /**
+//     * 获取提供者数量统计
+//     */
+//    public Map<String, Integer> getProviderStatistics() {
+//        Map<String, Integer> stats = new LinkedHashMap<>();
+//        stats.put(COMPUTE_TYPE_JAVA, getJavaProviders().size());
+//        stats.put(COMPUTE_TYPE_SPARK, getSparkProviders().size());
+//        stats.put(COMPUTE_TYPE_FLINK, getFlinkProviders().size());
+//        stats.put("TOTAL", loadAllProviders().size());
+//        return stats;
+//    }
 
     /**
      * 获取方法统计

@@ -13,36 +13,31 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
+package com.github.paohaijiao.provider.aggregate.impl;
+
+
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickJavaGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickJavaGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import java.util.List;
-import java.util.Objects;
 
-public class JQuickMaxGroupByProvider extends JQuickJavaGroupByAggregationProvider<Object> {
+public class JQuickFirstGroupByProvider extends JQuickJavaGroupByAggregationProvider<Object> {
 
-    private final String maxColumn;
+    private final String firstColumn;
 
-    public JQuickMaxGroupByProvider(List<String> groupByColumns, String resultColumnName, String maxColumn) {
+    public JQuickFirstGroupByProvider(List<String> groupByColumns, String resultColumnName, String firstColumn) {
         super(groupByColumns, resultColumnName);
-        this.maxColumn = maxColumn;
+        this.firstColumn = firstColumn;
     }
 
     @Override
     protected Object aggregateGroup(List<JQuickRow> groupRows) {
-        return groupRows.stream()
-                .map(row -> row.get(maxColumn))
-                .filter(Objects::nonNull)
-                .max((a, b) -> {
-                    if (a instanceof Comparable && b instanceof Comparable) {
-                        return ((Comparable) a).compareTo(b);
-                    }
-                    return a.toString().compareTo(b.toString());
-                })
-                .orElse(null);
+        if (groupRows == null || groupRows.isEmpty()) {
+            return null;
+        }
+        return groupRows.get(0).get(firstColumn);
     }
 
     @Override
@@ -50,16 +45,14 @@ public class JQuickMaxGroupByProvider extends JQuickJavaGroupByAggregationProvid
         return Object.class;
     }
 
-
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickJavaComputeTypeMaxImpl();
+        return new JQuickJavaComputeTypeFirstImpl();
     }
-    private static class JQuickJavaComputeTypeMaxImpl extends JQuickJavaComputeTypeImpl {
-
+    private static class JQuickJavaComputeTypeFirstImpl extends JQuickJavaComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.MAX;
+            return JQuickProviderMethodConstants.FIRST;
         }
     }
 }

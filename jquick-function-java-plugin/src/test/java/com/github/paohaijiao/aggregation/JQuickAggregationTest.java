@@ -16,7 +16,7 @@
 package com.github.paohaijiao.aggregation;
 
 
-import com.github.paohaijiao.provider.impl.JQuickSumGroupByProvider;
+import com.github.paohaijiao.provider.aggregate.impl.JQuickSumGroupByProvider;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
 import org.junit.Test;
