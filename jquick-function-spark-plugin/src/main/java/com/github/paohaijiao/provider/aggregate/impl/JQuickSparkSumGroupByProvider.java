@@ -13,24 +13,37 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
+package com.github.paohaijiao.provider.aggregate.impl;
+
+/**
+ * packageName com.github.paohaijiao.provider.impl
+ *
+ * @author Martin
+ * @version 1.0.0
+ * @since 2026/5/5
+ */
+
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickSparkComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickSparkGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickSparkGroupByAggregationProvider;
 import org.apache.spark.sql.*;
 
 import java.util.List;
 
-import static org.apache.spark.sql.functions.*;
+import static org.apache.spark.sql.functions.col;
+import static org.apache.spark.sql.functions.sum;
 
-public class JQuickSparkAvgGroupByProvider extends JQuickSparkGroupByAggregationProvider<Double> {
+/**
+ * Spark分布式求和聚合器
+ */
+public class JQuickSparkSumGroupByProvider extends JQuickSparkGroupByAggregationProvider<Double> {
 
-    private final String avgColumn;
+    private final String sumColumn;
 
-    public JQuickSparkAvgGroupByProvider(List<String> groupByColumns, String resultColumnName, String avgColumn, SparkSession spark) {
+    public JQuickSparkSumGroupByProvider(List<String> groupByColumns, String resultColumnName, String sumColumn, SparkSession spark) {
         super(groupByColumns, resultColumnName, spark);
-        this.avgColumn = avgColumn;
+        this.sumColumn = sumColumn;
     }
 
     @Override
@@ -38,7 +51,7 @@ public class JQuickSparkAvgGroupByProvider extends JQuickSparkGroupByAggregation
         Column[] groupCols = groupByColumns.stream()
                 .map(functions::col)
                 .toArray(Column[]::new);
-        return df.groupBy(groupCols).agg(avg(col(avgColumn)).alias(resultColumnName));
+        return df.groupBy(groupCols).agg(sum(col(sumColumn)).alias(resultColumnName));
     }
 
     @Override
@@ -48,7 +61,7 @@ public class JQuickSparkAvgGroupByProvider extends JQuickSparkGroupByAggregation
     private static class JQuickSparkComputeTypeSumImpl extends JQuickSparkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.AVG;
+            return JQuickProviderMethodConstants.SUM;
         }
     }
 }

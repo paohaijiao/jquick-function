@@ -13,23 +13,20 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider;
+package com.github.paohaijiao.provider.aggregate;
+
 import com.github.paohaijiao.convert.SparkDataSetConverter;
+import com.github.paohaijiao.provider.JQuickAggregationProvider;
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
-import org.apache.spark.sql.*;
-import org.apache.spark.sql.expressions.Window;
-import org.apache.spark.sql.types.DataType;
-import org.apache.spark.sql.types.DataTypes;
-import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.apache.spark.sql.functions.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Spark分布式分组聚合器抽象基类

@@ -13,29 +13,26 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
+package com.github.paohaijiao.provider.aggregate.impl;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickSparkComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickSparkGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickSparkGroupByAggregationProvider;
 import org.apache.spark.sql.*;
 
 import java.util.List;
 
+import static org.apache.spark.sql.functions.avg;
 import static org.apache.spark.sql.functions.col;
-import static org.apache.spark.sql.functions.max;
 
-/**
- * Spark分布式最大值聚合器
- */
-public class JQuickSparkMaxGroupByProvider extends JQuickSparkGroupByAggregationProvider<Object> {
+public class JQuickSparkAvgGroupByProvider extends JQuickSparkGroupByAggregationProvider<Double> {
 
-    private final String maxColumn;
+    private final String avgColumn;
 
-    public JQuickSparkMaxGroupByProvider(List<String> groupByColumns, String resultColumnName, String maxColumn, SparkSession spark) {
+    public JQuickSparkAvgGroupByProvider(List<String> groupByColumns, String resultColumnName, String avgColumn, SparkSession spark) {
         super(groupByColumns, resultColumnName, spark);
-        this.maxColumn = maxColumn;
+        this.avgColumn = avgColumn;
     }
 
     @Override
@@ -43,18 +40,17 @@ public class JQuickSparkMaxGroupByProvider extends JQuickSparkGroupByAggregation
         Column[] groupCols = groupByColumns.stream()
                 .map(functions::col)
                 .toArray(Column[]::new);
-        return df.groupBy(groupCols).agg(max(col(maxColumn)).alias(resultColumnName));
+        return df.groupBy(groupCols).agg(avg(col(avgColumn)).alias(resultColumnName));
     }
 
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickSparkComputeTypeMaxImpl();
+        return new JQuickSparkComputeTypeSumImpl();
     }
-
-    private static class JQuickSparkComputeTypeMaxImpl extends JQuickSparkComputeTypeImpl {
+    private static class JQuickSparkComputeTypeSumImpl extends JQuickSparkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.MAX;
+            return JQuickProviderMethodConstants.AVG;
         }
     }
 }

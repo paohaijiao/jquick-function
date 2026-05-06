@@ -13,31 +13,36 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
+package com.github.paohaijiao.provider.aggregate.impl;
+
+
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickSparkComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickSparkGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickSparkGroupByAggregationProvider;
 import org.apache.spark.sql.*;
 
 import java.util.List;
 
 import static org.apache.spark.sql.functions.*;
 
-public class JQuickSparkCountGroupByProvider extends JQuickSparkGroupByAggregationProvider<Long> {
+/**
+ * Spark分布式方差聚合器
+ */
+public class JQuickSparkVarianceGroupByProvider extends JQuickSparkGroupByAggregationProvider<Double> {
 
-    private final boolean distinct;
+    private final String varianceColumn;
 
-    private String countColumn;
+    private final boolean isSample; // true: 样本方差(var_samp), false: 总体方差(var_pop)
 
-    public JQuickSparkCountGroupByProvider(List<String> groupByColumns, String resultColumnName, SparkSession spark) {
-        this(groupByColumns, resultColumnName, null, false, spark);
+    public JQuickSparkVarianceGroupByProvider(List<String> groupByColumns, String resultColumnName, String varianceColumn, SparkSession spark) {
+        this(groupByColumns, resultColumnName, varianceColumn, false, spark);
     }
 
-    public JQuickSparkCountGroupByProvider(List<String> groupByColumns, String resultColumnName, String countColumn, boolean distinct, SparkSession spark) {
+    public JQuickSparkVarianceGroupByProvider(List<String> groupByColumns, String resultColumnName, String varianceColumn, boolean isSample, SparkSession spark) {
         super(groupByColumns, resultColumnName, spark);
-        this.countColumn = countColumn;
-        this.distinct = distinct;
+        this.varianceColumn = varianceColumn;
+        this.isSample = isSample;
     }
 
     @Override
@@ -45,26 +50,23 @@ public class JQuickSparkCountGroupByProvider extends JQuickSparkGroupByAggregati
         Column[] groupCols = groupByColumns.stream()
                 .map(functions::col)
                 .toArray(Column[]::new);
-        if (countColumn == null) {
-            // 计数所有行
-            return df.groupBy(groupCols).agg(count(col("*")).alias(resultColumnName));
-        } else if (distinct) {
-            // 去重计数
-            return df.groupBy(groupCols).agg(countDistinct(col(countColumn)).alias(resultColumnName));
+
+        if (isSample) {
+            return df.groupBy(groupCols).agg(var_samp(col(varianceColumn)).alias(resultColumnName));
         } else {
-            // 非空计数
-            return df.groupBy(groupCols)
-                    .agg(count(col(countColumn)).alias(resultColumnName));
+            return df.groupBy(groupCols).agg(var_pop(col(varianceColumn)).alias(resultColumnName));
         }
     }
+
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickSparkComputeTypeCountImpl();
+        return new JQuickSparkComputeTypeVarianceImpl();
     }
-    private static class JQuickSparkComputeTypeCountImpl extends JQuickSparkComputeTypeImpl {
+
+    private static class JQuickSparkComputeTypeVarianceImpl extends JQuickSparkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.COUNT;
+            return JQuickProviderMethodConstants.VARIANCE;
         }
     }
 }

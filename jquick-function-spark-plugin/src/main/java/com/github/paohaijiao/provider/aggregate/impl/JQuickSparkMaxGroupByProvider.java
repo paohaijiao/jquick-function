@@ -13,35 +13,29 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
+package com.github.paohaijiao.provider.aggregate.impl;
 
-/**
- * packageName com.github.paohaijiao.provider.impl
- *
- * @author Martin
- * @version 1.0.0
- * @since 2026/5/5
- */
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickSparkComputeTypeImpl;
 import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
-import com.github.paohaijiao.provider.JQuickSparkGroupByAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickSparkGroupByAggregationProvider;
 import org.apache.spark.sql.*;
 
 import java.util.List;
 
-import static org.apache.spark.sql.functions.*;
+import static org.apache.spark.sql.functions.col;
+import static org.apache.spark.sql.functions.max;
 
 /**
- * Spark分布式求和聚合器
+ * Spark分布式最大值聚合器
  */
-public class JQuickSparkSumGroupByProvider extends JQuickSparkGroupByAggregationProvider<Double> {
+public class JQuickSparkMaxGroupByProvider extends JQuickSparkGroupByAggregationProvider<Object> {
 
-    private final String sumColumn;
+    private final String maxColumn;
 
-    public JQuickSparkSumGroupByProvider(List<String> groupByColumns, String resultColumnName, String sumColumn, SparkSession spark) {
+    public JQuickSparkMaxGroupByProvider(List<String> groupByColumns, String resultColumnName, String maxColumn, SparkSession spark) {
         super(groupByColumns, resultColumnName, spark);
-        this.sumColumn = sumColumn;
+        this.maxColumn = maxColumn;
     }
 
     @Override
@@ -49,17 +43,18 @@ public class JQuickSparkSumGroupByProvider extends JQuickSparkGroupByAggregation
         Column[] groupCols = groupByColumns.stream()
                 .map(functions::col)
                 .toArray(Column[]::new);
-        return df.groupBy(groupCols).agg(sum(col(sumColumn)).alias(resultColumnName));
+        return df.groupBy(groupCols).agg(max(col(maxColumn)).alias(resultColumnName));
     }
 
     @Override
     public JQuickComputeTypeImpl getType() {
-        return new JQuickSparkComputeTypeSumImpl();
+        return new JQuickSparkComputeTypeMaxImpl();
     }
-    private static class JQuickSparkComputeTypeSumImpl extends JQuickSparkComputeTypeImpl {
+
+    private static class JQuickSparkComputeTypeMaxImpl extends JQuickSparkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.SUM;
+            return JQuickProviderMethodConstants.MAX;
         }
     }
 }
