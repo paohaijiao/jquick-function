@@ -18,7 +18,7 @@ package com.github.paohaijiao.provider.aggregate.impl;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickSparkComputeTypeImpl;
-import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.provider.aggregate.JQuickSparkGroupByAggregationProvider;
 import org.apache.spark.sql.*;
 
@@ -66,7 +66,7 @@ public class JQuickSparkMedianGroupByProvider extends JQuickSparkGroupByAggregat
     private static class JQuickSparkComputeTypeMedianImpl extends JQuickSparkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.MEDIAN;
+            return JQuickAggregateProviderMethodConstants.MEDIAN;
         }
     }
 }

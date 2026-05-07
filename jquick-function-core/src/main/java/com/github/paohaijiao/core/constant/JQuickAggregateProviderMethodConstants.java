@@ -26,7 +26,7 @@ import java.util.Set;
  * @version 1.0.0
  * @since 2026/5/5
  */
-public class JQuickProviderMethodConstants  {
+public class JQuickAggregateProviderMethodConstants {
 
     public static final String SUM = "sum";
 

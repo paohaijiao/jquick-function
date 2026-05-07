@@ -25,7 +25,7 @@ package com.github.paohaijiao.provider.aggregate.impl;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickSparkComputeTypeImpl;
-import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.provider.aggregate.JQuickSparkGroupByAggregationProvider;
 import org.apache.spark.sql.*;
 
@@ -61,7 +61,7 @@ public class JQuickSparkSumGroupByProvider extends JQuickSparkGroupByAggregation
     private static class JQuickSparkComputeTypeSumImpl extends JQuickSparkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.SUM;
+            return JQuickAggregateProviderMethodConstants.SUM;
         }
     }
 }

@@ -17,7 +17,7 @@ package com.github.paohaijiao.provider.aggregate.impl;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickFlinkComputeTypeImpl;
-import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.provider.aggregate.JQuickFlinkGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import org.apache.flink.api.common.functions.GroupReduceFunction;
@@ -127,7 +127,7 @@ public class JQuickFlinkStdDevGroupByProvider extends JQuickFlinkGroupByAggregat
     private static class JQuickFlinkComputeTypeStdImpl extends JQuickFlinkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.STDDEV;
+            return JQuickAggregateProviderMethodConstants.STDDEV;
         }
     }
 }

@@ -25,7 +25,7 @@ package com.github.paohaijiao.provider.aggregate.impl;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickFlinkComputeTypeImpl;
-import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.provider.aggregate.JQuickFlinkGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -100,7 +100,7 @@ public class JQuickFlinkSumGroupByProvider extends JQuickFlinkGroupByAggregation
     private static class JQuickFlinkComputeTypeSumImpl extends JQuickFlinkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.SUM;
+            return JQuickAggregateProviderMethodConstants.SUM;
         }
     }
 }

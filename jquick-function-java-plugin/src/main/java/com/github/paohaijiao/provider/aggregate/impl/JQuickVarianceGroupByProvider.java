@@ -18,7 +18,7 @@ package com.github.paohaijiao.provider.aggregate.impl;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
-import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.provider.aggregate.JQuickJavaGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import java.util.List;
@@ -70,7 +70,7 @@ public class JQuickVarianceGroupByProvider extends JQuickJavaGroupByAggregationP
     private static class JQuickJavaComputeTypeVarianceImpl extends JQuickJavaComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.VARIANCE;
+            return JQuickAggregateProviderMethodConstants.VARIANCE;
         }
     }
 }

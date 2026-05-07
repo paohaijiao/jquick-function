@@ -17,7 +17,7 @@ package com.github.paohaijiao.provider.aggregate.impl;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickSparkComputeTypeImpl;
-import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.provider.aggregate.JQuickSparkGroupByAggregationProvider;
 import org.apache.spark.sql.*;
 
@@ -59,7 +59,7 @@ public class JQuickSparkLastGroupByProvider extends JQuickSparkGroupByAggregatio
     private static class JQuickSparkComputeTypeLastImpl extends JQuickSparkComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.LAST;
+            return JQuickAggregateProviderMethodConstants.LAST;
         }
     }
 }

@@ -17,7 +17,7 @@ package com.github.paohaijiao.provider.aggregate.impl;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.compute.JQuickJavaComputeTypeImpl;
-import com.github.paohaijiao.core.constant.JQuickProviderMethodConstants;
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.provider.aggregate.JQuickJavaGroupByAggregationProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import java.util.List;
@@ -70,7 +70,7 @@ public class JQuickStdDevGroupByProvider extends JQuickJavaGroupByAggregationPro
     private static class JQuickJavaComputeTypeMinImpl extends JQuickJavaComputeTypeImpl {
         @Override
         public String getMethod() {
-            return JQuickProviderMethodConstants.STDDEV;
+            return JQuickAggregateProviderMethodConstants.STDDEV;
         }
     }
 }
