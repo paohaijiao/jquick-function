@@ -16,8 +16,8 @@
 package com.github.paohaijiao;
 
 import com.github.paohaijiao.provider.standard.JQuickFlinkBaseStandardProvider;
-import com.github.paohaijiao.provider.standard.impl.JQuickConcatProvider;
-import com.github.paohaijiao.provider.standard.impl.JQuickSumFieldsProvider;
+import com.github.paohaijiao.provider.standard.impl.JQuickFlinkConcatProvider;
+import com.github.paohaijiao.provider.standard.impl.JQuickFlinkSumFieldsProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
@@ -61,15 +61,15 @@ public class JQuickStandardTest {
         ));
 
         // ConcatProvider 示例
-        JQuickConcatProvider doubleConcat = new JQuickConcatProvider("name", "age", "name_age", " - ");
-        JQuickConcatProvider multiConcat = new JQuickConcatProvider(
+        JQuickFlinkConcatProvider doubleConcat = new JQuickFlinkConcatProvider("name", "age", "name_age", " - ");
+        JQuickFlinkConcatProvider multiConcat = new JQuickFlinkConcatProvider(
                 Arrays.asList("name", "age", "salary"),
                 "full_info",
                 " | "
         );
 
         // SumFieldsProvider 示例
-        JQuickSumFieldsProvider sumBasic = new JQuickSumFieldsProvider(
+        JQuickFlinkSumFieldsProvider sumBasic = new JQuickFlinkSumFieldsProvider(
                 Arrays.asList("salary", "bonus"),
                 "total"
         );
@@ -109,10 +109,10 @@ public class JQuickStandardTest {
 
         // 方式2：直接使用 DataStream 转换
         // 先注册 UDF
-        JQuickConcatProvider concatProvider = new JQuickConcatProvider("name", "age", "name_age", " - ");
+        JQuickFlinkConcatProvider concatProvider = new JQuickFlinkConcatProvider("name", "age", "name_age", " - ");
         concatProvider.registerUDF(tableEnv, "concat_name_age");
 
-        JQuickSumFieldsProvider sumProvider = new JQuickSumFieldsProvider(
+        JQuickFlinkSumFieldsProvider sumProvider = new JQuickFlinkSumFieldsProvider(
                 Arrays.asList("salary", "bonus"), "sum_salary_bonus"
         );
         sumProvider.registerUDF(tableEnv, "sum_salary_bonus");

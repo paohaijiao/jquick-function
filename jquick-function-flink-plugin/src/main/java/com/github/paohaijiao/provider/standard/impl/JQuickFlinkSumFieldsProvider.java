@@ -67,7 +67,7 @@ import java.util.List;
  * );
  * </pre>
  */
-public class JQuickSumFieldsProvider extends JQuickFlinkBaseStandardProvider<Double> {
+public class JQuickFlinkSumFieldsProvider extends JQuickFlinkBaseStandardProvider<Double> {
 
     private final boolean skipNull;
     private final double defaultValue;
@@ -78,7 +78,7 @@ public class JQuickSumFieldsProvider extends JQuickFlinkBaseStandardProvider<Dou
      * @param dependentColumns 依赖的源字段列表
      * @param outputColumnName 输出的新字段名称
      */
-    public JQuickSumFieldsProvider(List<String> dependentColumns, String outputColumnName) {
+    public JQuickFlinkSumFieldsProvider(List<String> dependentColumns, String outputColumnName) {
         this(dependentColumns, outputColumnName, true, 0.0);
     }
 
@@ -89,7 +89,7 @@ public class JQuickSumFieldsProvider extends JQuickFlinkBaseStandardProvider<Dou
      * @param outputColumnName 输出的新字段名称
      * @param skipNull         是否跳过 null 值（true: 跳过, false: 视为 0）
      */
-    public JQuickSumFieldsProvider(List<String> dependentColumns, String outputColumnName, boolean skipNull) {
+    public JQuickFlinkSumFieldsProvider(List<String> dependentColumns, String outputColumnName, boolean skipNull) {
         this(dependentColumns, outputColumnName, skipNull, 0.0);
     }
 
@@ -101,8 +101,8 @@ public class JQuickSumFieldsProvider extends JQuickFlinkBaseStandardProvider<Dou
      * @param skipNull         是否跳过 null 值
      * @param defaultValue     默认值（当 skipNull 为 false 且值为 null 时使用）
      */
-    public JQuickSumFieldsProvider(List<String> dependentColumns, String outputColumnName,
-                                   boolean skipNull, double defaultValue) {
+    public JQuickFlinkSumFieldsProvider(List<String> dependentColumns, String outputColumnName,
+                                        boolean skipNull, double defaultValue) {
         super(dependentColumns, outputColumnName);
         this.skipNull = skipNull;
         this.defaultValue = defaultValue;
@@ -115,7 +115,7 @@ public class JQuickSumFieldsProvider extends JQuickFlinkBaseStandardProvider<Dou
      * @param col2             第二个字段名
      * @param outputColumnName 输出的新字段名称
      */
-    public JQuickSumFieldsProvider(String col1, String col2, String outputColumnName) {
+    public JQuickFlinkSumFieldsProvider(String col1, String col2, String outputColumnName) {
         this(java.util.Arrays.asList(col1, col2), outputColumnName, true, 0.0);
     }
 

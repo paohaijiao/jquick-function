@@ -15,61 +15,62 @@
  */
 package com.github.paohaijiao.provider.standard.impl;
 
-/**
- * packageName com.github.paohaijiao.provider.standard
- *
- * @author Martin
- * @version 1.0.0
- * @since 2026/5/6
- */
-
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.provider.standard.JQuickFlinkBaseStandardProvider;
 
 import java.util.List;
 
 /**
- * 将字段转换为 String 类型（Flink 版本）
+ * 将字段转换为 Integer 类型（Flink 版本）
+ * 支持 DataSet API、Table API 和 SQL
  */
-public class JQuickToStringProvider extends JQuickFlinkBaseStandardProvider<String> {
+public class JQuickFlinkToIntegerProvider extends JQuickFlinkBaseStandardProvider<Integer> {
 
-    private final String nullReplacement;
-
-    public JQuickToStringProvider(String dependentColumn, String outputColumnName) {
-        this(dependentColumn, outputColumnName, null);
-    }
-
-    public JQuickToStringProvider(String dependentColumn, String outputColumnName, String nullReplacement) {
+    public JQuickFlinkToIntegerProvider(String dependentColumn, String outputColumnName) {
         super(dependentColumn, outputColumnName);
-        this.nullReplacement = nullReplacement;
     }
 
-    public JQuickToStringProvider(List<String> dependentColumns, String outputColumnName) {
-        this(dependentColumns, outputColumnName, null);
-    }
-
-    public JQuickToStringProvider(List<String> dependentColumns, String outputColumnName, String nullReplacement) {
+    public JQuickFlinkToIntegerProvider(List<String> dependentColumns, String outputColumnName) {
         super(dependentColumns, outputColumnName);
-        this.nullReplacement = nullReplacement;
     }
 
     @Override
-    protected String transform(List<Object> values) {
+    protected Integer transform(List<Object> values) {
         if (values == null || values.isEmpty()) {
-            return nullReplacement;
+            return null;
         }
 
         Object value = values.get(0);
         if (value == null) {
-            return nullReplacement;
+            return null;
         }
 
-        return value.toString();
+        if (value instanceof Number) {
+            return ((Number) value).intValue();
+        }
+
+        if (value instanceof String) {
+            String str = ((String) value).trim();
+            if (str.isEmpty()) {
+                return null;
+            }
+            try {
+                return Integer.parseInt(str);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+
+        if (value instanceof Boolean) {
+            return ((Boolean) value) ? 1 : 0;
+        }
+
+        return null;
     }
 
     @Override
-    public Class<String> getOutputClass() {
-        return String.class;
+    public Class<Integer> getOutputClass() {
+        return Integer.class;
     }
 
     @Override

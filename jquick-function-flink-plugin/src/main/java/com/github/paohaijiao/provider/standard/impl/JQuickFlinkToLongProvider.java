@@ -15,6 +15,14 @@
  */
 package com.github.paohaijiao.provider.standard.impl;
 
+/**
+ * packageName com.github.paohaijiao.provider.standard.impl
+ *
+ * @author Martin
+ * @version 1.0.0
+ * @since 2026/5/6
+ */
+
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.provider.standard.JQuickFlinkBaseStandardProvider;
@@ -22,20 +30,20 @@ import com.github.paohaijiao.provider.standard.JQuickFlinkBaseStandardProvider;
 import java.util.List;
 
 /**
- * 将字段转换为 Double 类型（Flink 版本）
+ * 将字段转换为 Long 类型（Flink 版本）
  */
-public class JQuickToDoubleProvider extends JQuickFlinkBaseStandardProvider<Double> {
+public class JQuickFlinkToLongProvider extends JQuickFlinkBaseStandardProvider<Long> {
 
-    public JQuickToDoubleProvider(String dependentColumn, String outputColumnName) {
+    public JQuickFlinkToLongProvider(String dependentColumn, String outputColumnName) {
         super(dependentColumn, outputColumnName);
     }
 
-    public JQuickToDoubleProvider(List<String> dependentColumns, String outputColumnName) {
+    public JQuickFlinkToLongProvider(List<String> dependentColumns, String outputColumnName) {
         super(dependentColumns, outputColumnName);
     }
 
     @Override
-    protected Double transform(List<Object> values) {
+    protected Long transform(List<Object> values) {
         if (values == null || values.isEmpty()) {
             return null;
         }
@@ -46,7 +54,7 @@ public class JQuickToDoubleProvider extends JQuickFlinkBaseStandardProvider<Doub
         }
 
         if (value instanceof Number) {
-            return ((Number) value).doubleValue();
+            return ((Number) value).longValue();
         }
 
         if (value instanceof String) {
@@ -55,22 +63,22 @@ public class JQuickToDoubleProvider extends JQuickFlinkBaseStandardProvider<Doub
                 return null;
             }
             try {
-                return Double.parseDouble(str);
+                return Long.parseLong(str);
             } catch (NumberFormatException e) {
                 return null;
             }
         }
 
         if (value instanceof Boolean) {
-            return ((Boolean) value) ? 1.0 : 0.0;
+            return ((Boolean) value) ? 1L : 0L;
         }
 
         return null;
     }
 
     @Override
-    public Class<Double> getOutputClass() {
-        return Double.class;
+    public Class<Long> getOutputClass() {
+        return Long.class;
     }
 
     @Override
