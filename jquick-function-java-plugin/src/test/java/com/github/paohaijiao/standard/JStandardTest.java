@@ -24,20 +24,23 @@ public class JStandardTest {
         JQuickStandardSumFieldsProvider sumProvider = new JQuickStandardSumFieldsProvider(
                 Arrays.asList("salary", "bonus"), "total"
         );
+        JQuickStandardSumFieldsProvider standardProvider = new JQuickStandardSumFieldsProvider(
+                Arrays.asList("salary"), "salary"
+        );
         JQuickDataSet result1 = ageToInt.transform(dataSet);
         JQuickDataSet result2 = JQuickBaseStandardProvider.transformChain(
                 dataSet, ageToInt, nameConcat, sumProvider
         );
 
         JQuickDataSet result3 = JQuickBaseStandardProvider.transformChain(
-                dataSet, false, ageToInt, nameConcat, sumProvider
+                dataSet, false,standardProvider, ageToInt, nameConcat, sumProvider
         );
 
-        System.out.println("=== 原始数据 ===");
-        dataSet.printTable();
-
-        System.out.println("\n=== 转换结果（保留原始列）===");
-        result2.printTable();
+//        System.out.println("=== 原始数据 ===");
+//        dataSet.printTable();
+//
+//        System.out.println("\n=== 转换结果（保留原始列）===");
+//        result2.printTable();
 
         System.out.println("\n=== 转换结果（删除原始列）===");
         result3.printTable();

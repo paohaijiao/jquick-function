@@ -74,12 +74,10 @@ public class JQuickStandardToIntegerProvider extends JQuickBaseStandardProvider<
         if (values == null || values.isEmpty()) {
             return null;
         }
-
         Object value = values.get(0);
         if (value == null) {
             return null;
         }
-
         if (value instanceof Number) {
             return ((Number) value).intValue();
         }
