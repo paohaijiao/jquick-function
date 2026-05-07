@@ -77,15 +77,11 @@ public abstract class JQuickFlinkBaseStandardProvider<R> implements JStandardPro
     public JQuickFlinkBaseStandardProvider(String dependentColumn, String outputColumnName) {
         this(Collections.singletonList(dependentColumn), outputColumnName);
     }
-
-    // ==================== 本地模式核心方法 ====================
-
     /**
      * DataSet 链式转换
      */
     @SafeVarargs
-    public static DataSet<JQuickRow> transformChain(DataSet<JQuickRow> dataSet,
-                                                    JQuickFlinkBaseStandardProvider<?>... providers) {
+    public static DataSet<JQuickRow> transformChain(DataSet<JQuickRow> dataSet, JQuickFlinkBaseStandardProvider<?>... providers) {
         DataSet<JQuickRow> result = dataSet;
         for (JQuickFlinkBaseStandardProvider<?> provider : providers) {
             result = provider.transform(result);
@@ -97,8 +93,7 @@ public abstract class JQuickFlinkBaseStandardProvider<R> implements JStandardPro
      * JQuickDataSet 链式转换
      */
     @SafeVarargs
-    public static JQuickDataSet transformChain(JQuickDataSet dataSet,
-                                               JQuickFlinkBaseStandardProvider<?>... providers) {
+    public static JQuickDataSet transformChain(JQuickDataSet dataSet, JQuickFlinkBaseStandardProvider<?>... providers) {
         JQuickDataSet result = dataSet;
         for (JQuickFlinkBaseStandardProvider<?> provider : providers) {
             result = provider.transform(result);
@@ -259,9 +254,6 @@ public abstract class JQuickFlinkBaseStandardProvider<R> implements JStandardPro
                 );
         }
     }
-
-    // ==================== 辅助方法 ====================
-
     /**
      * 应用到 JQuickDataSet（本地批量处理）
      */
@@ -325,10 +317,7 @@ public abstract class JQuickFlinkBaseStandardProvider<R> implements JStandardPro
         List<String> availableColumns = dataSet.getColumnNames();
         for (String col : dependentColumns) {
             if (!availableColumns.contains(col)) {
-                throw new IllegalArgumentException(
-                        String.format("Dependent column '%s' not found in dataset. Available columns: %s",
-                                col, availableColumns)
-                );
+                throw new IllegalArgumentException(String.format("Dependent column '%s' not found in dataset. Available columns: %s", col, availableColumns));
             }
         }
     }

@@ -16,8 +16,8 @@
 package com.github.paohaijiao;
 
 import com.github.paohaijiao.provider.standard.JQuickBaseStandardProvider;
-import com.github.paohaijiao.provider.standard.impl.ConcatProvider;
-import com.github.paohaijiao.provider.standard.impl.ToIntegerProvider;
+import com.github.paohaijiao.provider.standard.impl.JQuickSparkConcatProvider;
+import com.github.paohaijiao.provider.standard.impl.JQuickSparkToIntegerProvider;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
@@ -50,10 +50,10 @@ public class JQuickSparkStandardTest {
         );
 
         // 单个转换
-        ToIntegerProvider ageToInt = new ToIntegerProvider("age", "age_int");
+        JQuickSparkToIntegerProvider ageToInt = new JQuickSparkToIntegerProvider("age", "age_int");
         Dataset<Row> df1 = ageToInt.transform(df);
         // 链式转换
-        ConcatProvider nameConcat = new ConcatProvider(Arrays.asList("name", "age_int"), "name_age", " - ");
+        JQuickSparkConcatProvider nameConcat = new JQuickSparkConcatProvider(Arrays.asList("name", "age_int"), "name_age", " - ");
         Dataset<Row> df2 = nameConcat.transform(df1);
         Dataset<Row> result = JQuickBaseStandardProvider.transformChain(df, ageToInt, nameConcat);
         result.show();

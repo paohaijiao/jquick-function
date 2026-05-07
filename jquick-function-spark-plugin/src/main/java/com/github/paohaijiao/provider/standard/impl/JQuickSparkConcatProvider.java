@@ -31,11 +31,11 @@ import java.util.stream.Collectors;
  * @since 2026/5/6
  */
 
-public class ConcatProvider extends JQuickBaseStandardProvider<String> {
+public class JQuickSparkConcatProvider extends JQuickBaseStandardProvider<String> {
 
     private final String delimiter;
 
-    public ConcatProvider(List<String> dependentColumns, String outputColumnName, String delimiter) {
+    public JQuickSparkConcatProvider(List<String> dependentColumns, String outputColumnName, String delimiter) {
         super(dependentColumns, outputColumnName);
         this.delimiter = delimiter != null ? delimiter : "";
     }

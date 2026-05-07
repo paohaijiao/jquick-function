@@ -29,9 +29,9 @@ import java.util.List;
  * @version 1.0.0
  * @since 2026/5/6
  */
-public class ToIntegerProvider extends JQuickBaseStandardProvider<Integer> {
+public class JQuickSparkToIntegerProvider extends JQuickBaseStandardProvider<Integer> {
 
-    public ToIntegerProvider(String dependentColumn, String outputColumnName) {
+    public JQuickSparkToIntegerProvider(String dependentColumn, String outputColumnName) {
         super(dependentColumn, outputColumnName);
     }
 

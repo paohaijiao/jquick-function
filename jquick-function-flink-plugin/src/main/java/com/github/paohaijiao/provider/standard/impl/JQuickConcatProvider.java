@@ -48,7 +48,9 @@ import java.util.stream.Collectors;
 public class JQuickConcatProvider extends JQuickFlinkBaseStandardProvider<String> {
 
     private final String delimiter;
+
     private final boolean skipNull;
+
     private final String nullReplacement;
 
     /**
@@ -83,8 +85,7 @@ public class JQuickConcatProvider extends JQuickFlinkBaseStandardProvider<String
      * @param skipNull         是否跳过 null 值
      * @param nullReplacement  null 值的替换字符串（skipNull 为 false 时生效）
      */
-    public JQuickConcatProvider(List<String> dependentColumns, String outputColumnName,
-                                String delimiter, boolean skipNull, String nullReplacement) {
+    public JQuickConcatProvider(List<String> dependentColumns, String outputColumnName, String delimiter, boolean skipNull, String nullReplacement) {
         super(dependentColumns, outputColumnName);
         this.delimiter = delimiter != null ? delimiter : "";
         this.skipNull = skipNull;
@@ -118,7 +119,6 @@ public class JQuickConcatProvider extends JQuickFlinkBaseStandardProvider<String
         if (values == null || values.isEmpty()) {
             return null;
         }
-
         if (skipNull) {
             // 跳过 null 值
             return values.stream()
