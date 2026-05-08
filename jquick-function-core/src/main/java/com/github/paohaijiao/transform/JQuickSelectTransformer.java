@@ -129,62 +129,7 @@ public class JQuickSelectTransformer extends JQuickDataSetTransformer {
 }
 
 
-/**
- * 聚合函数 Provider 实现
- */
-class SumProvider extends AbstractAggregationProvider<Double> {
-    public SumProvider(String sourceColumn, String targetField) {
-        super(sourceColumn, targetField, Double.class);
-    }
 
-    @Override
-    public Double apply(JQuickRow row) {
-        Number value = row.getAs(sourceColumn, Number.class);
-        return value != null ? value.doubleValue() : 0.0;
-    }
 
-    @Override
-    public Double accumulate(Double current, Double next) {
-        return current + next;
-    }
-}
 
-class CountProvider extends AbstractAggregationProvider<Long> {
-    public CountProvider(String targetField) {
-        super(null, targetField, Long.class);
-    }
 
-    @Override
-    public Long apply(JQuickRow row) {
-        return 1L;
-    }
-
-    @Override
-    public Long accumulate(Long current, Long next) {
-        return current + next;
-    }
-}
-
-abstract class AbstractAggregationProvider<T> implements JQuickFunctionProvider<JQuickRow, T> {
-    protected final String sourceColumn;
-    protected final String targetField;
-    protected final Class<T> targetClass;
-
-    public AbstractAggregationProvider(String sourceColumn, String targetField, Class<T> targetClass) {
-        this.sourceColumn = sourceColumn;
-        this.targetField = targetField;
-        this.targetClass = targetClass;
-    }
-
-    @Override
-    public String getTargetField() {
-        return targetField;
-    }
-
-    @Override
-    public Class<?> getTargetClass() {
-        return targetClass;
-    }
-
-    public abstract T accumulate(T current, T next);
-}
