@@ -11,26 +11,26 @@ import java.util.function.Function;
 /**
  * 条件 Provider
  */
-public class ConditionalProvider<T> extends JQuickAbstractJQuickValueProvider<JQuickRow, T> {
+public class JQuickConditionalProvider<T> extends JQuickAbstractJQuickValueProvider<JQuickRow, T> {
 
     private final List<Condition<T>> conditions = new ArrayList<>();
 
-    public ConditionalProvider(String targetField, Class<T> targetClass) {
+    public JQuickConditionalProvider(String targetField, Class<T> targetClass) {
         super(targetField, targetClass);
     }
 
-    public ConditionalProvider(String targetField, Class<T> targetClass, T defaultValue) {
+    public JQuickConditionalProvider(String targetField, Class<T> targetClass, T defaultValue) {
         super(targetField, targetClass);
         this.defaultValue = defaultValue;
         this.nullable = true;
     }
 
-    public ConditionalProvider<T> when(Function<JQuickRow, Boolean> predicate, T value) {
+    public JQuickConditionalProvider<T> when(Function<JQuickRow, Boolean> predicate, T value) {
         conditions.add(new Condition<>(predicate, value));
         return this;
     }
 
-    public ConditionalProvider<T> whenEquals(String column, Object expected, T value) {
+    public JQuickConditionalProvider<T> whenEquals(String column, Object expected, T value) {
         return when(row -> Objects.equals(row.get(column), expected), value);
     }
 

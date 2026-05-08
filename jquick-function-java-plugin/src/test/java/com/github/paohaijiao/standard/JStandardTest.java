@@ -83,7 +83,7 @@ public class JStandardTest {
                             return (salary != null ? salary : 0.0) + (bonus != null ? bonus : 0.0);
                         }, "salary", "bonus"),
                 // 添加状态描述
-                new ConditionalProvider<String>("status", String.class, "未知")
+                new JQuickConditionalProvider<String>("status", String.class, "未知")
                         .whenEquals("active", true, "在职")
                         .whenEquals("active", false, "离职")
         );
@@ -177,12 +177,12 @@ public class JStandardTest {
     public void testConditionalFields() {
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
                 // 年龄分组
-                new ConditionalProvider<String>("ageGroup", String.class, "未知")
+                new JQuickConditionalProvider<String>("ageGroup", String.class, "未知")
                         .when(row -> row.getInt("age") < 25, "青年")
                         .when(row -> row.getInt("age") >= 25 && row.getInt("age") < 30, "壮年")
                         .when(row -> row.getInt("age") >= 30, "中年"),
                 // 薪资等级 + 活动状态组合
-                new ConditionalProvider<String>("recommendation", String.class, "无")
+                new JQuickConditionalProvider<String>("recommendation", String.class, "无")
                         .when(row -> row.getDouble("salary") > 9000 && Boolean.TRUE.equals(row.getBoolean("active")), "推荐晋升")
                         .when(row -> row.getDouble("salary") > 7000, "表现良好")
                         .when(row -> Boolean.FALSE.equals(row.getBoolean("active")), "需关注")
