@@ -131,7 +131,7 @@ public class JStandardTest {
                             if (salary >= 8000) return "中";
                             return "低";
                         }),
-                ConstantProvider.string("company", "XX科技有限公司"),
+                JQuickConstantProvider.string("company", "XX科技有限公司"),
                 // 组合列 - 全名
                 new CompositeProvider<>("fullName", String.class,
                         row -> row.getString("name") + "(" + row.getInt("age") + "岁)", "name", "age")
@@ -322,7 +322,7 @@ public class JStandardTest {
                 new JQuickDefaultValueProvider<>("age", "displayAge", Integer.class, 0),
                 new JQuickDefaultValueProvider<>("salary", "displaySalary", Double.class, 0.0)
                         .converter(value -> ((Number) value).doubleValue()),
-                ConstantProvider.string("defaultDept", "默认部门")
+                JQuickConstantProvider.string("defaultDept", "默认部门")
         );
 
         JQuickDataSet result = new JQuickSelectTransformer(dataSetWithNull, providers)
