@@ -11,13 +11,13 @@ import java.util.function.Function;
 /**
  * 组合 Provider（多字段）
  */
-public class CompositeProvider<T> extends JQuickAbstractJQuickValueProvider<JQuickRow, T> {
+public class JQuickCompositeProvider<T> extends JQuickAbstractJQuickValueProvider<JQuickRow, T> {
 
     protected final Function<JQuickRow, T> combiner;
 
     protected final List<String> dependentColumns;
 
-    public CompositeProvider(String targetField, Class<T> targetClass, Function<JQuickRow, T> combiner, String... dependentColumns) {
+    public JQuickCompositeProvider(String targetField, Class<T> targetClass, Function<JQuickRow, T> combiner, String... dependentColumns) {
         super(targetField, targetClass);
         this.combiner = combiner;
         this.dependentColumns = Arrays.asList(dependentColumns);
@@ -32,8 +32,8 @@ public class CompositeProvider<T> extends JQuickAbstractJQuickValueProvider<JQui
         return dependentColumns;
     }
 
-    public static CompositeProvider<String> concat(String targetField, String delimiter, String... columns) {
-        return new CompositeProvider<>(targetField, String.class, row -> {
+    public static JQuickCompositeProvider<String> concat(String targetField, String delimiter, String... columns) {
+        return new JQuickCompositeProvider<>(targetField, String.class, row -> {
             StringBuilder sb = new StringBuilder();
             for (String col : columns) {
                 Object val = row.get(col);
@@ -46,8 +46,8 @@ public class CompositeProvider<T> extends JQuickAbstractJQuickValueProvider<JQui
         }, columns);
     }
 
-    public static CompositeProvider<Double> sum(String targetField, String... numericColumns) {
-        return new CompositeProvider<>(targetField, Double.class, row -> {
+    public static JQuickCompositeProvider<Double> sum(String targetField, String... numericColumns) {
+        return new JQuickCompositeProvider<>(targetField, Double.class, row -> {
             double sum = 0.0;
             for (String col : numericColumns) {
                 Number val = row.getAs(col, Number.class);

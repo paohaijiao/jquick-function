@@ -69,20 +69,17 @@ public class JStandardTest {
     @Test
     public void testKeepOriginalColumns() {
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                // 计算年薪 = 月薪 * 12
-                new CompositeProvider<>("annualSalary", Double.class,
+                new JQuickCompositeProvider<>("annualSalary", Double.class,
                         row -> {
                             Double salary = row.getAs("salary", Double.class);
                             return salary != null ? salary * 12 : 0.0;
                         }, "salary"),
-                // 计算总收入 = 月薪 + 奖金
-                new CompositeProvider<>("totalIncome", Double.class,
+                new JQuickCompositeProvider<>("totalIncome", Double.class,
                         row -> {
                             Double salary = row.getAs("salary", Double.class);
                             Double bonus = row.getAs("bonus", Double.class);
                             return (salary != null ? salary : 0.0) + (bonus != null ? bonus : 0.0);
                         }, "salary", "bonus"),
-                // 添加状态描述
                 new JQuickConditionalProvider<String>("status", String.class, "未知")
                         .whenEquals("active", true, "在职")
                         .whenEquals("active", false, "离职")
@@ -101,19 +98,13 @@ public class JStandardTest {
      */
     @Test
     public void testAliasAndExclude() {
-        System.out.println("========== 测试3: 重命名列 + 排除列 ==========");
-        List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                JQuickColumnProvider.asString("name", "employee_name"),
-                JQuickColumnProvider.asDouble("salary", "base_salary")
-        );
-
+        List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(JQuickColumnProvider.asString("name", "employee_name"), JQuickColumnProvider.asDouble("salary", "base_salary"));
         JQuickSelectTransformer transformer = JQuickSelectTransformer
                 .select(originalDataSet, providers.toArray(new JQuickFunctionProvider[0]))
                 .keepOriginalColumns(true)
-                .alias("id", "employee_id")      // 重命名列
-                .alias("department", "dept")      // 重命名列
-                .exclude("bonus", "active");      // 排除 bonus 和 active 列
-
+                .alias("id", "employee_id")
+                .alias("department", "dept")
+                .exclude("bonus", "active");
         JQuickDataSet result = transformer.transform();
         result.printTable();
     }
@@ -132,14 +123,11 @@ public class JStandardTest {
                             return "低";
                         }),
                 JQuickConstantProvider.string("company", "XX科技有限公司"),
-                // 组合列 - 全名
-                new CompositeProvider<>("fullName", String.class,
-                        row -> row.getString("name") + "(" + row.getInt("age") + "岁)", "name", "age")
+                new JQuickCompositeProvider<>("fullName", String.class, row -> row.getString("name") + "(" + row.getInt("age") + "岁)", "name", "age")
         );
         JQuickSelectTransformer transformer = JQuickSelectTransformer
                 .select(originalDataSet, providers.toArray(new JQuickFunctionProvider[0]))
-                .keepOriginalColumns(false);  // 只保留 provider 定义的列
-
+                .keepOriginalColumns(false);
         JQuickDataSet result = transformer.transform();
         result.printTable();
     }
@@ -150,12 +138,9 @@ public class JStandardTest {
     @Test
     public void testComputedFields() {
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                // 字符串拼接
-                CompositeProvider.concat("dept_info", "-", "department", "name"),
-                // 数值求和
-                CompositeProvider.sum("total_compensation", "salary", "bonus"),
-                // 自定义计算 - 税后工资
-                new CompositeProvider<>("afterTax", Double.class,
+                JQuickCompositeProvider.concat("dept_info", "-", "department", "name"),
+                JQuickCompositeProvider.sum("total_compensation", "salary", "bonus"),
+                new JQuickCompositeProvider<>("afterTax", Double.class,
                         row -> {
                             Double salary = row.getAs("salary", Double.class);
                             return salary != null ? salary * 0.85 : 0.0;
@@ -165,7 +150,6 @@ public class JStandardTest {
         JQuickSelectTransformer transformer = JQuickSelectTransformer
                 .select(originalDataSet, providers.toArray(new JQuickFunctionProvider[0]))
                 .keepOriginalColumns(true);
-
         JQuickDataSet result = transformer.transform();
         result.printTable();
     }
@@ -176,12 +160,10 @@ public class JStandardTest {
     @Test
     public void testConditionalFields() {
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                // 年龄分组
                 new JQuickConditionalProvider<String>("ageGroup", String.class, "未知")
                         .when(row -> row.getInt("age") < 25, "青年")
                         .when(row -> row.getInt("age") >= 25 && row.getInt("age") < 30, "壮年")
                         .when(row -> row.getInt("age") >= 30, "中年"),
-                // 薪资等级 + 活动状态组合
                 new JQuickConditionalProvider<String>("recommendation", String.class, "无")
                         .when(row -> row.getDouble("salary") > 9000 && Boolean.TRUE.equals(row.getBoolean("active")), "推荐晋升")
                         .when(row -> row.getDouble("salary") > 7000, "表现良好")
@@ -198,28 +180,21 @@ public class JStandardTest {
     }
 
     /**
-     * 测试7: 链式转换 - 多次转换
      */
     @Test
     public void testChainedTransformations() {
-        System.out.println("========== 测试7: 链式转换 ==========");
-
-        // 第一次转换：选择基础列
         List<JQuickFunctionProvider<?, ?>> firstProviders = Arrays.asList(
                 JQuickColumnProvider.asString("name", "name"),
                 JQuickColumnProvider.asInt("age", "age"),
                 JQuickColumnProvider.asDouble("salary", "salary")
         );
-
         JQuickDataSet firstResult = new JQuickSelectTransformer(originalDataSet, firstProviders)
                 .transform();
 
         System.out.println("--- 第一次转换后 ---");
         firstResult.printTable();
-
-        // 第二次转换：基于第一次结果继续处理
         List<JQuickFunctionProvider<?, ?>> secondProviders = Arrays.asList(
-                new CompositeProvider<>("salaryLevel", String.class,
+                new JQuickCompositeProvider<>("salaryLevel", String.class,
                         row -> {
                             Double salary = row.getAs("salary", Double.class);
                             if (salary >= 10000) return "A级";
@@ -233,7 +208,6 @@ public class JStandardTest {
                 .select(firstResult, secondProviders.toArray(new JQuickFunctionProvider[0]))
                 .keepOriginalColumns(true)
                 .transform();
-
         System.out.println("--- 第二次转换后 ---");
         finalResult.printTable();
     }
@@ -243,9 +217,6 @@ public class JStandardTest {
      */
     @Test
     public void testCustomProvider() {
-        System.out.println("========== 测试8: 自定义 Provider ==========");
-
-        // 自定义匿名 Provider
         JQuickFunctionProvider<JQuickRow, String> customProvider = new JQuickFunctionProvider<JQuickRow, String>() {
             @Override
             public String apply(JQuickRow row) {
@@ -264,14 +235,11 @@ public class JStandardTest {
                 return String.class;
             }
         };
-
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
                 JQuickColumnProvider.asInt("id", "id"),
                 customProvider
         );
-
-        JQuickDataSet result = new JQuickSelectTransformer(originalDataSet, providers)
-                .transform();
+        JQuickDataSet result = new JQuickSelectTransformer(originalDataSet, providers).transform();
 
         result.printTable();
     }
@@ -287,13 +255,10 @@ public class JStandardTest {
                 nameProvider,
                 ageProvider
         );
-
         JQuickDataSet result = new JQuickSelectTransformer(originalDataSet, providers)
                 .keepOriginalColumns(false)
                 .transform();
-
         result.printTable();
-        System.out.println("转换完成，共 " + result.size() + " 行，" + result.getColumns().size() + " 列");
     }
 
     /**
@@ -301,32 +266,24 @@ public class JStandardTest {
      */
     @Test
     public void testNullHandling() {
-        System.out.println("========== 测试10: 空值处理 ==========");
-
-        // 创建包含空值的数据集
         JQuickRow nullRow = new JQuickRow();
         nullRow.put("id", 99);
         nullRow.put("name", null);
         nullRow.put("age", null);
         nullRow.put("salary", null);
         nullRow.put("department", "测试部");
-
         List<JQuickRow> rowsWithNull = new java.util.ArrayList<>(originalDataSet.getRows());
         rowsWithNull.add(nullRow);
-
         List<JQuickColumnMeta> columns = originalDataSet.getColumns();
         JQuickDataSet dataSetWithNull = new JQuickDataSet(columns, rowsWithNull);
-
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
                 new JQuickDefaultValueProvider<>("name", "displayName", String.class, "匿名用户"),
                 new JQuickDefaultValueProvider<>("age", "displayAge", Integer.class, 0),
-                new JQuickDefaultValueProvider<>("salary", "displaySalary", Double.class, 0.0)
-                        .converter(value -> ((Number) value).doubleValue()),
+                new JQuickDefaultValueProvider<>("salary", "displaySalary", Double.class, 0.0).converter(value -> ((Number) value).doubleValue()),
                 JQuickConstantProvider.string("defaultDept", "默认部门")
         );
-
         JQuickDataSet result = new JQuickSelectTransformer(dataSetWithNull, providers)
-                .keepOriginalColumns(false)
+                .keepOriginalColumns(true)
                 .transform();
 
         result.printTable();
