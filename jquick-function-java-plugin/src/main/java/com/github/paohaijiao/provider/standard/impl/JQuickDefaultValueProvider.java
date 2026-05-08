@@ -5,11 +5,11 @@ import com.github.paohaijiao.statement.JQuickRow;
 /**
  * 默认值 Provider
  */
-public class DefaultValueProvider<T> extends JQuickAbstractJQuickValueProvider<JQuickRow, T> {
+public class JQuickDefaultValueProvider<T> extends JQuickAbstractJQuickValueProvider<JQuickRow, T> {
 
     private final String sourceColumn;
 
-    public DefaultValueProvider(String sourceColumn, String targetField, Class<T> targetClass, T defaultValue) {
+    public JQuickDefaultValueProvider(String sourceColumn, String targetField, Class<T> targetClass, T defaultValue) {
         super(targetField, targetClass);
         this.sourceColumn = sourceColumn;
         this.defaultValue = defaultValue;

@@ -124,7 +124,7 @@ public class JStandardTest {
     @Test
     public void testTypeConversionAndDefaultValue() {
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                new DefaultValueProvider<>("salary", "salary_level", String.class, "0")
+                new JQuickDefaultValueProvider<>("salary", "salary_level", String.class, "0")
                         .converter(value -> {
                             double salary = ((Number) value).doubleValue();
                             if (salary >= 10000) return "高";
@@ -318,9 +318,9 @@ public class JStandardTest {
         JQuickDataSet dataSetWithNull = new JQuickDataSet(columns, rowsWithNull);
 
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                new DefaultValueProvider<>("name", "displayName", String.class, "匿名用户"),
-                new DefaultValueProvider<>("age", "displayAge", Integer.class, 0),
-                new DefaultValueProvider<>("salary", "displaySalary", Double.class, 0.0)
+                new JQuickDefaultValueProvider<>("name", "displayName", String.class, "匿名用户"),
+                new JQuickDefaultValueProvider<>("age", "displayAge", Integer.class, 0),
+                new JQuickDefaultValueProvider<>("salary", "displaySalary", Double.class, 0.0)
                         .converter(value -> ((Number) value).doubleValue()),
                 ConstantProvider.string("defaultDept", "默认部门")
         );
