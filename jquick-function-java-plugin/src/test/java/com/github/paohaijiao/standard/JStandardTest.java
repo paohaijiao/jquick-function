@@ -55,9 +55,9 @@ public class JStandardTest {
     @Test
     public void test() {
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                ColumnProvider.asString("name", "员工姓名"),
-                ColumnProvider.asInt("age", "年龄"),
-                ColumnProvider.asString("department", "部门")
+                JQuickColumnProvider.asString("name", "员工姓名"),
+                JQuickColumnProvider.asInt("age", "年龄"),
+                JQuickColumnProvider.asString("department", "部门")
         );
 
         JQuickSelectTransformer transformer = new JQuickSelectTransformer(originalDataSet, providers);
@@ -68,7 +68,6 @@ public class JStandardTest {
 
     @Test
     public void testKeepOriginalColumns() {
-        System.out.println("========== 测试2: 保留原始列 + 添加新列 ==========");
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
                 // 计算年薪 = 月薪 * 12
                 new CompositeProvider<>("annualSalary", Double.class,
@@ -104,8 +103,8 @@ public class JStandardTest {
     public void testAliasAndExclude() {
         System.out.println("========== 测试3: 重命名列 + 排除列 ==========");
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                ColumnProvider.asString("name", "employee_name"),
-                ColumnProvider.asDouble("salary", "base_salary")
+                JQuickColumnProvider.asString("name", "employee_name"),
+                JQuickColumnProvider.asDouble("salary", "base_salary")
         );
 
         JQuickSelectTransformer transformer = JQuickSelectTransformer
@@ -207,9 +206,9 @@ public class JStandardTest {
 
         // 第一次转换：选择基础列
         List<JQuickFunctionProvider<?, ?>> firstProviders = Arrays.asList(
-                ColumnProvider.asString("name", "name"),
-                ColumnProvider.asInt("age", "age"),
-                ColumnProvider.asDouble("salary", "salary")
+                JQuickColumnProvider.asString("name", "name"),
+                JQuickColumnProvider.asInt("age", "age"),
+                JQuickColumnProvider.asDouble("salary", "salary")
         );
 
         JQuickDataSet firstResult = new JQuickSelectTransformer(originalDataSet, firstProviders)
@@ -227,7 +226,7 @@ public class JStandardTest {
                             if (salary >= 8000) return "B级";
                             return "C级";
                         }, "salary"),
-                ColumnProvider.asString("name", "employeeName")
+                JQuickColumnProvider.asString("name", "employeeName")
         );
 
         JQuickDataSet finalResult = JQuickSelectTransformer
@@ -267,7 +266,7 @@ public class JStandardTest {
         };
 
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                ColumnProvider.asInt("id", "id"),
+                JQuickColumnProvider.asInt("id", "id"),
                 customProvider
         );
 
@@ -282,8 +281,8 @@ public class JStandardTest {
      */
     @Test
     public void testAndThenTransformation() {
-        ColumnProvider<String> nameProvider = ColumnProvider.asString("name", "name");
-        ColumnProvider<Integer> ageProvider = ColumnProvider.asInt("age", "age");
+        JQuickColumnProvider<String> nameProvider = JQuickColumnProvider.asString("name", "name");
+        JQuickColumnProvider<Integer> ageProvider = JQuickColumnProvider.asInt("age", "age");
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
                 nameProvider,
                 ageProvider

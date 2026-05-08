@@ -14,10 +14,10 @@ import java.util.function.Function;
 public class CompositeProvider<T> extends JQuickAbstractJQuickValueProvider<JQuickRow, T> {
 
     protected final Function<JQuickRow, T> combiner;
+
     protected final List<String> dependentColumns;
 
-    public CompositeProvider(String targetField, Class<T> targetClass,
-                             Function<JQuickRow, T> combiner, String... dependentColumns) {
+    public CompositeProvider(String targetField, Class<T> targetClass, Function<JQuickRow, T> combiner, String... dependentColumns) {
         super(targetField, targetClass);
         this.combiner = combiner;
         this.dependentColumns = Arrays.asList(dependentColumns);
