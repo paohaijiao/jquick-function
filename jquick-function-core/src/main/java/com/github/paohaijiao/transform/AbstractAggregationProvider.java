@@ -13,8 +13,9 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.aggregate.impl;
+package com.github.paohaijiao.transform;
 
+import com.github.paohaijiao.provider.JQuickFunctionProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 
 /**
@@ -24,19 +25,27 @@ import com.github.paohaijiao.statement.JQuickRow;
  * @version 1.0.0
  * @since 2026/5/8
  */
-public  class SumProvider extends AbstractAggregationProvider<Double> {
-    public SumProvider(String sourceColumn, String targetField) {
-        super(sourceColumn, targetField, Double.class);
+
+public abstract class AbstractAggregationProvider<T> implements JQuickFunctionProvider<JQuickRow, T> {
+    protected final String sourceColumn;
+    protected final String targetField;
+    protected final Class<T> targetClass;
+
+    public AbstractAggregationProvider(String sourceColumn, String targetField, Class<T> targetClass) {
+        this.sourceColumn = sourceColumn;
+        this.targetField = targetField;
+        this.targetClass = targetClass;
     }
 
     @Override
-    public Double apply(JQuickRow row) {
-        Number value = row.getAs(sourceColumn, Number.class);
-        return value != null ? value.doubleValue() : 0.0;
+    public String getTargetField() {
+        return targetField;
     }
 
     @Override
-    public Double accumulate(Double current, Double next) {
-        return current + next;
+    public Class<?> getTargetClass() {
+        return targetClass;
     }
+
+    public abstract T accumulate(T current, T next);
 }

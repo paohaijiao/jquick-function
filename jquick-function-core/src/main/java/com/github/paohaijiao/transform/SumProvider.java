@@ -13,7 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.aggregate.impl;
+package com.github.paohaijiao.transform;
 
 import com.github.paohaijiao.statement.JQuickRow;
 
@@ -24,18 +24,19 @@ import com.github.paohaijiao.statement.JQuickRow;
  * @version 1.0.0
  * @since 2026/5/8
  */
-public class CountProvider extends AbstractAggregationProvider<Long> {
-    public CountProvider(String targetField) {
-        super(null, targetField, Long.class);
+public  class SumProvider extends AbstractAggregationProvider<Double> {
+    public SumProvider(String sourceColumn, String targetField) {
+        super(sourceColumn, targetField, Double.class);
     }
 
     @Override
-    public Long apply(JQuickRow row) {
-        return 1L;
+    public Double apply(JQuickRow row) {
+        Number value = row.getAs(sourceColumn, Number.class);
+        return value != null ? value.doubleValue() : 0.0;
     }
 
     @Override
-    public Long accumulate(Long current, Long next) {
+    public Double accumulate(Double current, Double next) {
         return current + next;
     }
 }

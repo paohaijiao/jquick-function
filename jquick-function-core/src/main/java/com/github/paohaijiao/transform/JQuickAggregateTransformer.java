@@ -1,13 +1,11 @@
-package com.github.paohaijiao.provider.aggregate;
+package com.github.paohaijiao.transform;
 
 
 import com.github.paohaijiao.provider.JQuickFunctionProvider;
-import com.github.paohaijiao.provider.aggregate.impl.CountProvider;
-import com.github.paohaijiao.provider.aggregate.impl.SumProvider;
+
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
-import com.github.paohaijiao.transform.JQuickDataSetTransformer;
 
 import java.util.*;
 import java.util.stream.Collectors;

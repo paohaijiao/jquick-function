@@ -13,9 +13,8 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.aggregate.impl;
+package com.github.paohaijiao.transform;
 
-import com.github.paohaijiao.provider.JQuickFunctionProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 
 /**
@@ -25,27 +24,18 @@ import com.github.paohaijiao.statement.JQuickRow;
  * @version 1.0.0
  * @since 2026/5/8
  */
-
-public abstract class AbstractAggregationProvider<T> implements JQuickFunctionProvider<JQuickRow, T> {
-    protected final String sourceColumn;
-    protected final String targetField;
-    protected final Class<T> targetClass;
-
-    public AbstractAggregationProvider(String sourceColumn, String targetField, Class<T> targetClass) {
-        this.sourceColumn = sourceColumn;
-        this.targetField = targetField;
-        this.targetClass = targetClass;
+public class CountProvider extends AbstractAggregationProvider<Long> {
+    public CountProvider(String targetField) {
+        super(null, targetField, Long.class);
     }
 
     @Override
-    public String getTargetField() {
-        return targetField;
+    public Long apply(JQuickRow row) {
+        return 1L;
     }
 
     @Override
-    public Class<?> getTargetClass() {
-        return targetClass;
+    public Long accumulate(Long current, Long next) {
+        return current + next;
     }
-
-    public abstract T accumulate(T current, T next);
 }
