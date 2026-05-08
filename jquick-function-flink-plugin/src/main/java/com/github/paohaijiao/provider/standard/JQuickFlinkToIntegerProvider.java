@@ -13,8 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.standard.impl;
-
+package com.github.paohaijiao.provider.standard;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.provider.standard.JQuickFlinkBaseStandardProvider;
@@ -22,20 +21,21 @@ import com.github.paohaijiao.provider.standard.JQuickFlinkBaseStandardProvider;
 import java.util.List;
 
 /**
- * 将字段转换为 Double 类型（Flink 版本）
+ * 将字段转换为 Integer 类型（Flink 版本）
+ * 支持 DataSet API、Table API 和 SQL
  */
-public class JQuickFlinkToDoubleProvider extends JQuickFlinkBaseStandardProvider<Double> {
+public class JQuickFlinkToIntegerProvider extends JQuickFlinkBaseStandardProvider<Integer> {
 
-    public JQuickFlinkToDoubleProvider(String dependentColumn, String outputColumnName) {
+    public JQuickFlinkToIntegerProvider(String dependentColumn, String outputColumnName) {
         super(dependentColumn, outputColumnName);
     }
 
-    public JQuickFlinkToDoubleProvider(List<String> dependentColumns, String outputColumnName) {
+    public JQuickFlinkToIntegerProvider(List<String> dependentColumns, String outputColumnName) {
         super(dependentColumns, outputColumnName);
     }
 
     @Override
-    protected Double transform(List<Object> values) {
+    protected Integer transform(List<Object> values) {
         if (values == null || values.isEmpty()) {
             return null;
         }
@@ -46,7 +46,7 @@ public class JQuickFlinkToDoubleProvider extends JQuickFlinkBaseStandardProvider
         }
 
         if (value instanceof Number) {
-            return ((Number) value).doubleValue();
+            return ((Number) value).intValue();
         }
 
         if (value instanceof String) {
@@ -55,22 +55,22 @@ public class JQuickFlinkToDoubleProvider extends JQuickFlinkBaseStandardProvider
                 return null;
             }
             try {
-                return Double.parseDouble(str);
+                return Integer.parseInt(str);
             } catch (NumberFormatException e) {
                 return null;
             }
         }
 
         if (value instanceof Boolean) {
-            return ((Boolean) value) ? 1.0 : 0.0;
+            return ((Boolean) value) ? 1 : 0;
         }
 
         return null;
     }
 
     @Override
-    public Class<Double> getOutputClass() {
-        return Double.class;
+    public Class<Integer> getOutputClass() {
+        return Integer.class;
     }
 
     @Override

@@ -16,8 +16,8 @@
 package com.github.paohaijiao;
 
 import com.github.paohaijiao.provider.standard.JQuickFlinkBaseStandardProvider;
-import com.github.paohaijiao.provider.standard.impl.JQuickFlinkConcatProvider;
-import com.github.paohaijiao.provider.standard.impl.JQuickFlinkSumFieldsProvider;
+import com.github.paohaijiao.provider.standard.JQuickFlinkConcatProvider;
+import com.github.paohaijiao.provider.standard.JQuickFlinkSumFieldsProvider;
 import com.github.paohaijiao.statement.JQuickRow;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;

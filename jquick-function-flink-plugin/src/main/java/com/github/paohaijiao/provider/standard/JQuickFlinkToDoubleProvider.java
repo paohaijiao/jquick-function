@@ -13,15 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.standard.impl;
-
-/**
- * packageName com.github.paohaijiao.provider.standard.impl
- *
- * @author Martin
- * @version 1.0.0
- * @since 2026/5/6
- */
+package com.github.paohaijiao.provider.standard;
 
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
@@ -30,20 +22,20 @@ import com.github.paohaijiao.provider.standard.JQuickFlinkBaseStandardProvider;
 import java.util.List;
 
 /**
- * 将字段转换为 Long 类型（Flink 版本）
+ * 将字段转换为 Double 类型（Flink 版本）
  */
-public class JQuickFlinkToLongProvider extends JQuickFlinkBaseStandardProvider<Long> {
+public class JQuickFlinkToDoubleProvider extends JQuickFlinkBaseStandardProvider<Double> {
 
-    public JQuickFlinkToLongProvider(String dependentColumn, String outputColumnName) {
+    public JQuickFlinkToDoubleProvider(String dependentColumn, String outputColumnName) {
         super(dependentColumn, outputColumnName);
     }
 
-    public JQuickFlinkToLongProvider(List<String> dependentColumns, String outputColumnName) {
+    public JQuickFlinkToDoubleProvider(List<String> dependentColumns, String outputColumnName) {
         super(dependentColumns, outputColumnName);
     }
 
     @Override
-    protected Long transform(List<Object> values) {
+    protected Double transform(List<Object> values) {
         if (values == null || values.isEmpty()) {
             return null;
         }
@@ -54,7 +46,7 @@ public class JQuickFlinkToLongProvider extends JQuickFlinkBaseStandardProvider<L
         }
 
         if (value instanceof Number) {
-            return ((Number) value).longValue();
+            return ((Number) value).doubleValue();
         }
 
         if (value instanceof String) {
@@ -63,22 +55,22 @@ public class JQuickFlinkToLongProvider extends JQuickFlinkBaseStandardProvider<L
                 return null;
             }
             try {
-                return Long.parseLong(str);
+                return Double.parseDouble(str);
             } catch (NumberFormatException e) {
                 return null;
             }
         }
 
         if (value instanceof Boolean) {
-            return ((Boolean) value) ? 1L : 0L;
+            return ((Boolean) value) ? 1.0 : 0.0;
         }
 
         return null;
     }
 
     @Override
-    public Class<Long> getOutputClass() {
-        return Long.class;
+    public Class<Double> getOutputClass() {
+        return Double.class;
     }
 
     @Override

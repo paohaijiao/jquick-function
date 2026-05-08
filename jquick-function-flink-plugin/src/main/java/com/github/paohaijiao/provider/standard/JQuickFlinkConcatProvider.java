@@ -13,42 +13,39 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.standard.impl;
-
+package com.github.paohaijiao.provider.standard;
 
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
-import com.github.paohaijiao.provider.standard.JQuickBaseStandardProvider;
+import com.github.paohaijiao.provider.standard.JQuickFlinkBaseStandardProvider;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * 将多个字段拼接成字符串
+ * 将多个字段拼接成字符串（Flink 版本）
  *
  * <p>使用示例：
  * <pre>
  * // 单字段拼接
- * ConcatProvider provider = new ConcatProvider("name", "name_str");
+ * ConcatProvider provider = new ConcatProvider("name", "name_str", "", false);
  *
- * // 双字段拼接（带空格分隔符）
+ * // 多字段拼接
  * ConcatProvider provider = new ConcatProvider(
  *     Arrays.asList("first_name", "last_name"),
  *     "full_name",
  *     " "
  * );
  *
- * // 链式调用
- * JQuickDataSet result = JQuickBaseStandardProvider.transformChain(
- *     dataSet,
- *     new ConcatProvider("name", "age", "name_age", " - "),
- *     new ConcatProvider("name_age", "salary", "full_info", " | ")
- * );
+ * // Flink DataSet
+ * DataSet&lt;JQuickRow&gt; result = provider.transform(dataSet);
+ *
+ * // Flink Table
+ * Table result = provider.transform(table);
  * </pre>
  */
-public class JQuickStandardConcatProvider extends JQuickBaseStandardProvider<String> {
+public class JQuickFlinkConcatProvider extends JQuickFlinkBaseStandardProvider<String> {
 
     private final String delimiter;
 
@@ -57,23 +54,13 @@ public class JQuickStandardConcatProvider extends JQuickBaseStandardProvider<Str
     private final String nullReplacement;
 
     /**
-     * 构造函数 - 单字段（直接返回字符串，无分隔符）
-     *
-     * @param dependentColumn 依赖的源字段
-     * @param outputColumnName 输出的新字段名称
-     */
-    public JQuickStandardConcatProvider(String dependentColumn, String outputColumnName) {
-        this(Collections.singletonList(dependentColumn), outputColumnName, "", true, null);
-    }
-
-    /**
      * 构造函数 - 多字段拼接
      *
      * @param dependentColumns 依赖的源字段列表
      * @param outputColumnName 输出的新字段名称
-     * @param delimiter 分隔符
+     * @param delimiter        分隔符
      */
-    public JQuickStandardConcatProvider(List<String> dependentColumns, String outputColumnName, String delimiter) {
+    public JQuickFlinkConcatProvider(List<String> dependentColumns, String outputColumnName, String delimiter) {
         this(dependentColumns, outputColumnName, delimiter, true, null);
     }
 
@@ -82,10 +69,10 @@ public class JQuickStandardConcatProvider extends JQuickBaseStandardProvider<Str
      *
      * @param dependentColumns 依赖的源字段列表
      * @param outputColumnName 输出的新字段名称
-     * @param delimiter 分隔符
-     * @param skipNull 是否跳过 null 值
+     * @param delimiter        分隔符
+     * @param skipNull         是否跳过 null 值
      */
-    public JQuickStandardConcatProvider(List<String> dependentColumns, String outputColumnName, String delimiter, boolean skipNull) {
+    public JQuickFlinkConcatProvider(List<String> dependentColumns, String outputColumnName, String delimiter, boolean skipNull) {
         this(dependentColumns, outputColumnName, delimiter, skipNull, null);
     }
 
@@ -94,11 +81,11 @@ public class JQuickStandardConcatProvider extends JQuickBaseStandardProvider<Str
      *
      * @param dependentColumns 依赖的源字段列表
      * @param outputColumnName 输出的新字段名称
-     * @param delimiter 分隔符
-     * @param skipNull 是否跳过 null 值
-     * @param nullReplacement null 值的替换字符串（skipNull 为 false 时生效）
+     * @param delimiter        分隔符
+     * @param skipNull         是否跳过 null 值
+     * @param nullReplacement  null 值的替换字符串（skipNull 为 false 时生效）
      */
-    public JQuickStandardConcatProvider(List<String> dependentColumns, String outputColumnName, String delimiter, boolean skipNull, String nullReplacement) {
+    public JQuickFlinkConcatProvider(List<String> dependentColumns, String outputColumnName, String delimiter, boolean skipNull, String nullReplacement) {
         super(dependentColumns, outputColumnName);
         this.delimiter = delimiter != null ? delimiter : "";
         this.skipNull = skipNull;
@@ -108,26 +95,23 @@ public class JQuickStandardConcatProvider extends JQuickBaseStandardProvider<Str
     /**
      * 构造函数 - 双字段拼接（便捷方法）
      *
-     * @param col1 第一个字段名
-     * @param col2 第二个字段名
+     * @param col1             第一个字段名
+     * @param col2             第二个字段名
      * @param outputColumnName 输出的新字段名称
-     * @param delimiter 分隔符
+     * @param delimiter        分隔符
      */
-    public JQuickStandardConcatProvider(String col1, String col2, String outputColumnName, String delimiter) {
+    public JQuickFlinkConcatProvider(String col1, String col2, String outputColumnName, String delimiter) {
         this(java.util.Arrays.asList(col1, col2), outputColumnName, delimiter, true, null);
     }
 
     /**
-     * 构造函数 - 三字段拼接（便捷方法）
+     * 构造函数 - 单字段（直接返回字符串）
      *
-     * @param col1 第一个字段名
-     * @param col2 第二个字段名
-     * @param col3 第三个字段名
+     * @param dependentColumn  依赖的源字段
      * @param outputColumnName 输出的新字段名称
-     * @param delimiter 分隔符
      */
-    public JQuickStandardConcatProvider(String col1, String col2, String col3, String outputColumnName, String delimiter) {
-        this(java.util.Arrays.asList(col1, col2, col3), outputColumnName, delimiter, true, null);
+    public JQuickFlinkConcatProvider(String dependentColumn, String outputColumnName) {
+        this(java.util.Collections.singletonList(dependentColumn), outputColumnName, "", false, null);
     }
 
     @Override
@@ -135,7 +119,6 @@ public class JQuickStandardConcatProvider extends JQuickBaseStandardProvider<Str
         if (values == null || values.isEmpty()) {
             return null;
         }
-
         if (skipNull) {
             // 跳过 null 值
             return values.stream()

@@ -16,8 +16,8 @@
 package com.github.paohaijiao;
 
 import com.github.paohaijiao.provider.standard.JQuickBaseStandardProvider;
-import com.github.paohaijiao.provider.standard.impl.JQuickSparkConcatProvider;
-import com.github.paohaijiao.provider.standard.impl.JQuickSparkToIntegerProvider;
+import com.github.paohaijiao.provider.standard.JQuickSparkConcatProvider;
+import com.github.paohaijiao.provider.standard.JQuickSparkToIntegerProvider;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;

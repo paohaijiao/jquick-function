@@ -13,15 +13,16 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.standard.impl;
+package com.github.paohaijiao.provider.standard;
 
 /**
- * packageName com.github.paohaijiao.provider.standard
+ * packageName com.github.paohaijiao.provider.standard.impl
  *
  * @author Martin
  * @version 1.0.0
  * @since 2026/5/6
  */
+
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
 import com.github.paohaijiao.provider.standard.JQuickFlinkBaseStandardProvider;
@@ -29,47 +30,55 @@ import com.github.paohaijiao.provider.standard.JQuickFlinkBaseStandardProvider;
 import java.util.List;
 
 /**
- * 将字段转换为 String 类型（Flink 版本）
+ * 将字段转换为 Long 类型（Flink 版本）
  */
-public class JQuickFlinkToStringProvider extends JQuickFlinkBaseStandardProvider<String> {
+public class JQuickFlinkToLongProvider extends JQuickFlinkBaseStandardProvider<Long> {
 
-    private final String nullReplacement;
-
-    public JQuickFlinkToStringProvider(String dependentColumn, String outputColumnName) {
-        this(dependentColumn, outputColumnName, null);
-    }
-
-    public JQuickFlinkToStringProvider(String dependentColumn, String outputColumnName, String nullReplacement) {
+    public JQuickFlinkToLongProvider(String dependentColumn, String outputColumnName) {
         super(dependentColumn, outputColumnName);
-        this.nullReplacement = nullReplacement;
     }
 
-    public JQuickFlinkToStringProvider(List<String> dependentColumns, String outputColumnName) {
-        this(dependentColumns, outputColumnName, null);
-    }
-
-    public JQuickFlinkToStringProvider(List<String> dependentColumns, String outputColumnName, String nullReplacement) {
+    public JQuickFlinkToLongProvider(List<String> dependentColumns, String outputColumnName) {
         super(dependentColumns, outputColumnName);
-        this.nullReplacement = nullReplacement;
     }
 
     @Override
-    protected String transform(List<Object> values) {
+    protected Long transform(List<Object> values) {
         if (values == null || values.isEmpty()) {
-            return nullReplacement;
+            return null;
         }
 
         Object value = values.get(0);
         if (value == null) {
-            return nullReplacement;
+            return null;
         }
 
-        return value.toString();
+        if (value instanceof Number) {
+            return ((Number) value).longValue();
+        }
+
+        if (value instanceof String) {
+            String str = ((String) value).trim();
+            if (str.isEmpty()) {
+                return null;
+            }
+            try {
+                return Long.parseLong(str);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+
+        if (value instanceof Boolean) {
+            return ((Boolean) value) ? 1L : 0L;
+        }
+
+        return null;
     }
 
     @Override
-    public Class<String> getOutputClass() {
-        return String.class;
+    public Class<Long> getOutputClass() {
+        return Long.class;
     }
 
     @Override

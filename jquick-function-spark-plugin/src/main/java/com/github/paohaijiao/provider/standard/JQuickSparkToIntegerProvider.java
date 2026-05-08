@@ -13,25 +13,26 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.standard.impl;
+package com.github.paohaijiao.provider.standard;
 
 import com.github.paohaijiao.compute.JQuickComputeTypeImpl;
-import com.github.paohaijiao.provider.standard.JQuickFlinkBaseStandardProvider;
+import com.github.paohaijiao.provider.standard.JQuickBaseStandardProvider;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
 
 import java.util.List;
 
 /**
- * 将字段转换为 Integer 类型（Flink 版本）
- * 支持 DataSet API、Table API 和 SQL
+ * packageName com.github.paohaijiao.provider.standard.impl
+ *
+ * @author Martin
+ * @version 1.0.0
+ * @since 2026/5/6
  */
-public class JQuickFlinkToIntegerProvider extends JQuickFlinkBaseStandardProvider<Integer> {
+public class JQuickSparkToIntegerProvider extends JQuickBaseStandardProvider<Integer> {
 
-    public JQuickFlinkToIntegerProvider(String dependentColumn, String outputColumnName) {
+    public JQuickSparkToIntegerProvider(String dependentColumn, String outputColumnName) {
         super(dependentColumn, outputColumnName);
-    }
-
-    public JQuickFlinkToIntegerProvider(List<String> dependentColumns, String outputColumnName) {
-        super(dependentColumns, outputColumnName);
     }
 
     @Override
@@ -39,33 +40,23 @@ public class JQuickFlinkToIntegerProvider extends JQuickFlinkBaseStandardProvide
         if (values == null || values.isEmpty()) {
             return null;
         }
-
         Object value = values.get(0);
-        if (value == null) {
-            return null;
-        }
-
         if (value instanceof Number) {
             return ((Number) value).intValue();
         }
-
         if (value instanceof String) {
-            String str = ((String) value).trim();
-            if (str.isEmpty()) {
-                return null;
-            }
             try {
-                return Integer.parseInt(str);
+                return Integer.parseInt((String) value);
             } catch (NumberFormatException e) {
                 return null;
             }
         }
-
-        if (value instanceof Boolean) {
-            return ((Boolean) value) ? 1 : 0;
-        }
-
         return null;
+    }
+
+    @Override
+    public DataType getSparkDataType() {
+        return DataTypes.IntegerType;
     }
 
     @Override
@@ -78,3 +69,4 @@ public class JQuickFlinkToIntegerProvider extends JQuickFlinkBaseStandardProvide
         return null;
     }
 }
+

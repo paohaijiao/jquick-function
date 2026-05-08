@@ -48,7 +48,9 @@ public abstract class JQuickDataSetTransformer {
             transformedColumns.add(new JQuickColumnMeta(provider.getTargetField(),provider.getTargetClass(),""));
         }
         for (JQuickRow row : inputDataSet.getRows()) {
-            this.transformedRows.add(new JQuickRow(row));
+            JQuickRow newRow = new JQuickRow();
+            newRow.putAll(row);
+            this.transformedRows.add(newRow);
         }
     }
 
@@ -60,9 +62,11 @@ public abstract class JQuickDataSetTransformer {
      */
     public JQuickDataSet transform() {
         preProcess();
+        List<JQuickRow> originalRows = inputDataSet.getRows();  // 获取原始行
         for (int i = 0; i < transformedRows.size(); i++) {
-            JQuickRow row = transformedRows.get(i);
-            transformRow(row, providers, i);
+            JQuickRow targetRow = transformedRows.get(i);
+            JQuickRow sourceRow = originalRows.get(i);  // 原始数据行
+            transformRow(sourceRow, targetRow, providers, i);
         }
         postProcess();
         return buildDataSet();
@@ -77,8 +81,7 @@ public abstract class JQuickDataSetTransformer {
     protected void preProcess() {
     }
 
-    protected abstract void transformRow(JQuickRow row, List<JQuickFunctionProvider<?, ?>> fieldMappings, int rowIndex);
-
+    protected abstract void transformRow(JQuickRow sourceRow, JQuickRow targetRow, List<JQuickFunctionProvider<?, ?>> fieldMappings, int rowIndex);
     /**
      * 后处理方法（子类可覆盖）
      */
