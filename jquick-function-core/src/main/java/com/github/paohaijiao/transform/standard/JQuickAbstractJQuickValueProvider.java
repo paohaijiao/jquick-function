@@ -1,12 +1,8 @@
-package com.github.paohaijiao.provider.standard;
+package com.github.paohaijiao.transform.standard;
 
 
 import com.github.paohaijiao.provider.JQuickFunctionProvider;
-import com.github.paohaijiao.statement.JQuickRow;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -222,12 +218,7 @@ public abstract class JQuickAbstractJQuickValueProvider<T, R> implements JQuickF
         return (P) this;
     }
 
-    /**
-     * 应用后处理转换
-     */
-    public <NR> JQuickAbstractJQuickValueProvider<T, NR> andThen(Function<R, NR> after) {
-        return new TransformedProvider<>(this, after);
-    }
+
 
 
     /**
@@ -255,36 +246,7 @@ public abstract class JQuickAbstractJQuickValueProvider<T, R> implements JQuickF
         return String.format("%s{targetField='%s', targetClass=%s, nullable=%s, defaultValue=%s}",
                 getClass().getSimpleName(), targetField, targetClass.getSimpleName(), nullable, defaultValue);
     }
-}
 
-/**
- * 转换后的 Provider 包装器
- */
-class TransformedProvider<T, R, NR> extends JQuickAbstractJQuickValueProvider<T, NR> {
-
-    private final JQuickAbstractJQuickValueProvider<T, R> source;
-
-    private final Function<R, NR> transformer;
-
-    protected TransformedProvider(JQuickAbstractJQuickValueProvider<T, R> source, Function<R, NR> transformer) {
-        super(source.targetField, null);  // 类型会动态确定
-        this.source = source;
-        this.transformer = transformer;
-    }
-
-    @Override
-    protected Object getRawValue(T row) {
-        R value = source.apply(row);
-        return value;
-    }
-
-    @Override
-    protected NR convert(Object value) {
-        if (value == null) return null;
-        @SuppressWarnings("unchecked")
-        R typed = (R) value;
-        return transformer.apply(typed);
-    }
 }
 
 

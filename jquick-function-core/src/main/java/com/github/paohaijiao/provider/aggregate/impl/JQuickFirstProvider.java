@@ -1,4 +1,4 @@
-package com.github.paohaijiao.provider.aggregate;
+package com.github.paohaijiao.provider.aggregate.impl;
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@ package com.github.paohaijiao.provider.aggregate;
 
 import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickFirstAggregator;
+import com.github.paohaijiao.provider.aggregate.JQuickAbstractAggregationProvider;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
-import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 
 /**
  * FIRST 聚合提供者 - 获取第一个非空值

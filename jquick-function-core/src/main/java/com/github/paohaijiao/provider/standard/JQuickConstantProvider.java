@@ -1,7 +1,8 @@
-package com.github.paohaijiao.provider.standard.impl;
+package com.github.paohaijiao.provider.standard;
 
-import com.github.paohaijiao.provider.standard.JQuickAbstractJQuickValueProvider;
+import com.github.paohaijiao.core.constant.JQuickStandardProviderConstants;
 import com.github.paohaijiao.statement.JQuickRow;
+import com.github.paohaijiao.transform.standard.JQuickAbstractJQuickValueProvider;
 
 /**
  * 常量值 Provider
@@ -28,6 +29,11 @@ public class JQuickConstantProvider<T> extends JQuickAbstractJQuickValueProvider
 
     public static JQuickConstantProvider<Integer> integer(String targetField, Integer value) {
         return new JQuickConstantProvider<>(targetField, Integer.class, value);
+    }
+
+    @Override
+    public String getName() {
+        return JQuickStandardProviderConstants.CONSTANT;
     }
 }
 

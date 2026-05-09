@@ -1,7 +1,8 @@
-package com.github.paohaijiao.provider.standard.impl;
+package com.github.paohaijiao.provider.standard;
 
-import com.github.paohaijiao.provider.standard.JQuickAbstractJQuickValueProvider;
+import com.github.paohaijiao.core.constant.JQuickStandardProviderConstants;
 import com.github.paohaijiao.statement.JQuickRow;
+import com.github.paohaijiao.transform.standard.JQuickAbstractJQuickValueProvider;
 
 import java.util.function.Function;
 
@@ -50,5 +51,10 @@ public class JQuickColumnProvider<T> extends JQuickAbstractJQuickValueProvider<J
 
     public static JQuickColumnProvider<Boolean> asBoolean(String sourceColumn, String targetField) {
         return new JQuickColumnProvider<>(sourceColumn, targetField, Boolean.class);
+    }
+
+    @Override
+    public String getName() {
+        return JQuickStandardProviderConstants.COLUMN;
     }
 }

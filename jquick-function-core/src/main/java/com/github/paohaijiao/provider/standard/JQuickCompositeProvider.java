@@ -1,8 +1,9 @@
-package com.github.paohaijiao.provider.standard.impl;
+package com.github.paohaijiao.provider.standard;
 
 
-import com.github.paohaijiao.provider.standard.JQuickAbstractJQuickValueProvider;
+import com.github.paohaijiao.core.constant.JQuickStandardProviderConstants;
 import com.github.paohaijiao.statement.JQuickRow;
+import com.github.paohaijiao.transform.standard.JQuickAbstractJQuickValueProvider;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,5 +56,10 @@ public class JQuickCompositeProvider<T> extends JQuickAbstractJQuickValueProvide
             }
             return sum;
         }, numericColumns);
+    }
+
+    @Override
+    public String getName() {
+        return JQuickStandardProviderConstants.COMPOSITE;
     }
 }

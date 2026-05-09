@@ -16,11 +16,11 @@
 package com.github.paohaijiao.aggregation;
 
 import com.github.paohaijiao.provider.JQuickFunctionProvider;
-import com.github.paohaijiao.provider.aggregate.*;
+import com.github.paohaijiao.provider.aggregate.impl.*;
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
-import com.github.paohaijiao.transform.JQuickAggregateTransformer;
+import com.github.paohaijiao.transform.aggegate.JQuickAggregateTransformer;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,7 +1,7 @@
 package com.github.paohaijiao.standard;
 
 import com.github.paohaijiao.provider.JQuickFunctionProvider;
-import com.github.paohaijiao.provider.standard.impl.*;
+import com.github.paohaijiao.provider.standard.*;
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
@@ -218,6 +218,11 @@ public class JStandardTest {
     @Test
     public void testCustomProvider() {
         JQuickFunctionProvider<JQuickRow, String> customProvider = new JQuickFunctionProvider<JQuickRow, String>() {
+            @Override
+            public String getName() {
+                return "";
+            }
+
             @Override
             public String apply(JQuickRow row) {
                 String name = row.getString("name");

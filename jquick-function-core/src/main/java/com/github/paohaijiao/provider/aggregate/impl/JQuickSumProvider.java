@@ -13,7 +13,7 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.aggregate;
+package com.github.paohaijiao.provider.aggregate.impl;
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +31,9 @@ package com.github.paohaijiao.provider.aggregate;
  */
 import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickSumAggregator;
+import com.github.paohaijiao.provider.aggregate.JQuickAbstractAggregationProvider;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
-import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 
 import java.math.BigDecimal;
 

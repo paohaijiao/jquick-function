@@ -13,11 +13,11 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.aggregate;
+package com.github.paohaijiao.provider.aggregate.impl;
 
 import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickStddevAggregator;
-import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickAbstractAggregationProvider;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
 

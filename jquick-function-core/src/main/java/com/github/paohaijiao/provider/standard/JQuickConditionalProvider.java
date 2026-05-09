@@ -1,7 +1,8 @@
-package com.github.paohaijiao.provider.standard.impl;
+package com.github.paohaijiao.provider.standard;
 
-import com.github.paohaijiao.provider.standard.JQuickAbstractJQuickValueProvider;
+import com.github.paohaijiao.core.constant.JQuickStandardProviderConstants;
 import com.github.paohaijiao.statement.JQuickRow;
+import com.github.paohaijiao.transform.standard.JQuickAbstractJQuickValueProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,11 @@ public class JQuickConditionalProvider<T> extends JQuickAbstractJQuickValueProvi
             }
         }
         return defaultValue;
+    }
+
+    @Override
+    public String getName() {
+        return JQuickStandardProviderConstants.CONDITION;
     }
 
     private static class Condition<T> {

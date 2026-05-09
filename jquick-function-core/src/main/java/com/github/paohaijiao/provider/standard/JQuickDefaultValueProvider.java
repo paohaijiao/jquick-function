@@ -1,6 +1,8 @@
-package com.github.paohaijiao.provider.standard.impl;
-import com.github.paohaijiao.provider.standard.JQuickAbstractJQuickValueProvider;
+package com.github.paohaijiao.provider.standard;
+
+import com.github.paohaijiao.core.constant.JQuickStandardProviderConstants;
 import com.github.paohaijiao.statement.JQuickRow;
+import com.github.paohaijiao.transform.standard.JQuickAbstractJQuickValueProvider;
 
 /**
  * 默认值 Provider
@@ -25,5 +27,10 @@ public class JQuickDefaultValueProvider<T> extends JQuickAbstractJQuickValueProv
     @Override
     protected T handleNull() {
         return defaultValue;
+    }
+
+    @Override
+    public String getName() {
+        return JQuickStandardProviderConstants.DEFAULT;
     }
 }

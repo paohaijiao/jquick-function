@@ -26,9 +26,10 @@ import java.util.Set;
  * @version 1.0.0
  * @since 2026/5/5
  */
-public class JQuickStandardProviderMethodConstants {
+public class JQuickFunctionProviderConstants {
 
     public static final String METHOD_TO_INTEGER = "toInteger";
+
 
     public static final String METHOD_TO_STRING = "toString";
 
