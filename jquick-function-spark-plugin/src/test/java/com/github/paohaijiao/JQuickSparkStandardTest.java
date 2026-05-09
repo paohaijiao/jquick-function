@@ -20,8 +20,8 @@ import com.github.paohaijiao.provider.JQuickFunctionProvider;
 
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
-import com.github.paohaijiao.provider.impl.JQuickCountProvider;
-import com.github.paohaijiao.provider.impl.JQuickSumProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickCountProvider;
+import com.github.paohaijiao.provider.aggregate.JQuickSumProvider;
 
 import org.apache.spark.sql.SparkSession;
 import org.junit.Before;

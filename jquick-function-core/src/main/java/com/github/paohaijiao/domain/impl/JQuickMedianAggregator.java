@@ -13,7 +13,9 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.domain;
+package com.github.paohaijiao.domain.impl;
+
+import com.github.paohaijiao.domain.JQuickAggregator;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ import java.util.Objects;
  * @version 1.0.0
  * @since 2026/5/9
  */
-public class JQuickMedianAggregator<T extends Number & Comparable<T>> implements Serializable {
+public class JQuickMedianAggregator<T extends Number & Comparable<T>> implements Serializable , JQuickAggregator {
 
     private static final long serialVersionUID = 1L;
 
@@ -240,8 +242,7 @@ public class JQuickMedianAggregator<T extends Number & Comparable<T>> implements
 
     @Override
     public String toString() {
-        return String.format("MedianAggregator{size=%d, median=%s, q1=%s, q3=%s}",
-                size(), getMedian(), getFirstQuartile(), getThirdQuartile());
+        return String.format("MedianAggregator{size=%d, median=%s, q1=%s, q3=%s}", size(), getMedian(), getFirstQuartile(), getThirdQuartile());
     }
 
     @Override
@@ -255,5 +256,10 @@ public class JQuickMedianAggregator<T extends Number & Comparable<T>> implements
     @Override
     public int hashCode() {
         return Objects.hash(values, sorted);
+    }
+
+    @Override
+    public Object getResult() {
+        return getMedian();
     }
 }

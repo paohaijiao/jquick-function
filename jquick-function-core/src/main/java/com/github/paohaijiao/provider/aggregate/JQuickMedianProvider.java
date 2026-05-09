@@ -1,4 +1,4 @@
-package com.github.paohaijiao.provider.impl;
+package com.github.paohaijiao.provider.aggregate;
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@ package com.github.paohaijiao.provider.impl;
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
 
-import com.github.paohaijiao.domain.JQuickMedianAggregator;
+import com.github.paohaijiao.domain.impl.JQuickMedianAggregator;
 import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;

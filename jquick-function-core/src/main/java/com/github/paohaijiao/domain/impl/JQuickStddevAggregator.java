@@ -13,20 +13,22 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.domain;
+package com.github.paohaijiao.domain.impl;
+
+import com.github.paohaijiao.domain.JQuickAggregator;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * 方差累加器
- * 使用 Welford 算法在线计算方差，避免存储所有数据
+ * 标准差累加器
+ * 使用 Welford 算法在线计算标准差，避免存储所有数据
  *
  * @author Martin
  * @version 1.0.0
  * @since 2026/5/9
  */
-public class JQuickVarianceAggregator implements Serializable {
+public class JQuickStddevAggregator implements Serializable, JQuickAggregator {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,9 +36,9 @@ public class JQuickVarianceAggregator implements Serializable {
 
     private double mean = 0.0;       // 均值
 
-    private double m2 = 0.0;         // 平方差累积和（用于计算方差）
+    private double m2 = 0.0;         // 平方差累积和（用于计算标准差）
 
-    public JQuickVarianceAggregator() {
+    public JQuickStddevAggregator() {
     }
 
     /**
@@ -73,33 +75,31 @@ public class JQuickVarianceAggregator implements Serializable {
     }
 
     /**
-     * 合并另一个方差累加器
+     * 合并另一个标准差累加器
      *
      * @param other 另一个累加器
      */
-    public void merge(JQuickVarianceAggregator other) {
+    public void merge(JQuickStddevAggregator other) {
         if (other == null || other.count == 0) {
             return;
         }
-
         if (count == 0) {
             this.count = other.count;
             this.mean = other.mean;
             this.m2 = other.m2;
             return;
         }
+        // 合并两个数据集的算法
         long n1 = this.count;
         long n2 = other.count;
         long n = n1 + n2;
-
         double mean1 = this.mean;
         double mean2 = other.mean;
-
+        // 合并后的均值
         double newMean = (n1 * mean1 + n2 * mean2) / n;
-
+        // 合并后的平方差累积和
         double delta = mean2 - mean1;
         double newM2 = this.m2 + other.m2 + delta * delta * n1 * n2 / n;
-
         this.count = n;
         this.mean = newMean;
         this.m2 = newM2;
@@ -124,27 +124,27 @@ public class JQuickVarianceAggregator implements Serializable {
     }
 
     /**
-     * 获取总体方差（除以 n）
+     * 获取总体标准差（除以 n）
      *
-     * @return 总体方差，无数据时返回 null
+     * @return 总体标准差，无数据时返回 null
      */
-    public Double getPopulationVariance() {
+    public Double getPopulationStddev() {
         if (count == 0) {
             return null;
         }
-        return m2 / count;
+        return Math.sqrt(m2 / count);
     }
 
     /**
-     * 获取样本方差（除以 n-1）
+     * 获取样本标准差（除以 n-1）
      *
-     * @return 样本方差，无数据时返回 null
+     * @return 样本标准差，无数据时返回 null
      */
-    public Double getSampleVariance() {
+    public Double getSampleStddev() {
         if (count < 2) {
             return null;
         }
-        return m2 / (count - 1);
+        return Math.sqrt(m2 / (count - 1));
     }
 
     /**
@@ -167,21 +167,24 @@ public class JQuickVarianceAggregator implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("VarianceAggregator{count=%d, mean=%.4f, variance=%.4f}", count, mean, getPopulationVariance());
+        return String.format("StddevAggregator{count=%d, mean=%.4f, stddev=%.4f}", count, mean, getPopulationStddev());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        JQuickVarianceAggregator that = (JQuickVarianceAggregator) o;
-        return count == that.count &&
-                Double.compare(that.mean, mean) == 0 &&
-                Double.compare(that.m2, m2) == 0;
+        JQuickStddevAggregator that = (JQuickStddevAggregator) o;
+        return count == that.count && Double.compare(that.mean, mean) == 0 && Double.compare(that.m2, m2) == 0;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(count, mean, m2);
+    }
+
+    @Override
+    public Object getResult() {
+        return getPopulationStddev();
     }
 }

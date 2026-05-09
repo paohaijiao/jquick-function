@@ -13,9 +13,9 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.provider.impl;
+package com.github.paohaijiao.provider.aggregate;
 
-import com.github.paohaijiao.domain.JQuickMinAggregator;
+import com.github.paohaijiao.domain.impl.JQuickMinAggregator;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
 import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;

@@ -1,10 +1,9 @@
 package com.github.paohaijiao.transform;
 
-import com.github.paohaijiao.domain.JQuickAvgAggregator;
+import com.github.paohaijiao.domain.JQuickAggregator;
 import com.github.paohaijiao.group.JQuickGroupByKeyDomain;
 import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 import com.github.paohaijiao.provider.JQuickFunctionProvider;
-import com.github.paohaijiao.provider.impl.JQuickAvgProvider;
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
@@ -67,15 +66,9 @@ public class JQuickAggregateTransformer extends JQuickDataSetTransformer {
             for (JQuickFunctionProvider<?, ?> provider : providers) {
                 String targetField = provider.getTargetField();
                 Object value = row.get(targetField);
-                if (provider instanceof JQuickAvgProvider) {
-                    // 对于 AvgProvider，提取平均值
-                    JQuickAvgProvider avgProvider = (JQuickAvgProvider) provider;
-                    JQuickAvgAggregator<Number> aggregator = (JQuickAvgAggregator<Number>) value;
-                    Double avg = avgProvider.extractResult(aggregator);
-                    resultRow.put(targetField, avg);
-                } else if (provider instanceof JQuickAbstractAggregationProvider) {
-                    // 其他聚合函数直接取值
-                    resultRow.put(targetField, value);
+                if (provider instanceof JQuickAbstractAggregationProvider) {
+                    JQuickAggregator aggregator = (JQuickAggregator) value;
+                    resultRow.put(targetField, aggregator.getResult());
                 } else {
                     resultRow.put(targetField, value);
                 }

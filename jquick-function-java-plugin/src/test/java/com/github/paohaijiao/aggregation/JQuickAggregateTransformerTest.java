@@ -16,7 +16,7 @@
 package com.github.paohaijiao.aggregation;
 
 import com.github.paohaijiao.provider.JQuickFunctionProvider;
-import com.github.paohaijiao.provider.impl.*;
+import com.github.paohaijiao.provider.aggregate.*;
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;

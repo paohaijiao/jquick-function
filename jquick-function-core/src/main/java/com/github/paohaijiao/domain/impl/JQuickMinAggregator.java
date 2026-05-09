@@ -13,46 +13,49 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.domain;
+package com.github.paohaijiao.domain.impl;
+
+import com.github.paohaijiao.domain.JQuickAggregator;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * 最大值累加器
- * 用于计算一组数值中的最大值
+ * 最小值累加器
+ * 用于计算一组数值中的最小值
  *
  * @param <T> 数值类型
  * @author Martin
  * @version 1.0.0
  * @since 2026/5/9
  */
-public class JQuickMaxAggregator<T extends Number & Comparable<T>> implements Serializable {
+public class JQuickMinAggregator<T extends Number & Comparable<T>> implements Serializable, JQuickAggregator {
 
     private static final long serialVersionUID = 1L;
 
-    private T maxValue;
+    private T minValue;
+
     private boolean hasValue = false;
 
-    public JQuickMaxAggregator() {
+    public JQuickMinAggregator() {
     }
 
-    public JQuickMaxAggregator(T value) {
+    public JQuickMinAggregator(T value) {
         if (value != null) {
-            this.maxValue = value;
+            this.minValue = value;
             this.hasValue = true;
         }
     }
 
     /**
-     * 添加数值，更新最大值
+     * 添加数值，更新最小值
      *
      * @param value 数值（可为 null）
      */
     public void add(T value) {
         if (value != null) {
-            if (!hasValue || value.compareTo(maxValue) > 0) {
-                this.maxValue = value;
+            if (!hasValue || value.compareTo(minValue) < 0) {
+                this.minValue = value;
                 this.hasValue = true;
             }
         }
@@ -66,8 +69,8 @@ public class JQuickMaxAggregator<T extends Number & Comparable<T>> implements Se
     @SuppressWarnings("unchecked")
     public void add(double value) {
         Double doubleValue = value;
-        if (!hasValue || doubleValue.compareTo((Double) maxValue) > 0) {
-            this.maxValue = (T) doubleValue;
+        if (!hasValue || doubleValue.compareTo((Double) minValue) < 0) {
+            this.minValue = (T) doubleValue;
             this.hasValue = true;
         }
     }
@@ -80,57 +83,57 @@ public class JQuickMaxAggregator<T extends Number & Comparable<T>> implements Se
     @SuppressWarnings("unchecked")
     public void add(long value) {
         Long longValue = value;
-        if (!hasValue || longValue.compareTo((Long) maxValue) > 0) {
-            this.maxValue = (T) longValue;
+        if (!hasValue || longValue.compareTo((Long) minValue) < 0) {
+            this.minValue = (T) longValue;
             this.hasValue = true;
         }
     }
 
     /**
-     * 合并另一个最大值累加器
+     * 合并另一个最小值累加器
      *
      * @param other 另一个累加器
      */
-    public void merge(JQuickMaxAggregator<T> other) {
+    public void merge(JQuickMinAggregator<T> other) {
         if (other != null && other.hasValue) {
-            add(other.maxValue);
+            add(other.minValue);
         }
     }
 
     /**
-     * 获取最大值
+     * 获取最小值
      *
-     * @return 最大值，无数据时返回 null
+     * @return 最小值，无数据时返回 null
      */
-    public T getMax() {
-        return maxValue;
+    public T getMin() {
+        return minValue;
     }
 
     /**
-     * 获取最大值（double 类型）
+     * 获取最小值（double 类型）
      *
-     * @return 最大值，无数据时返回 null
+     * @return 最小值，无数据时返回 null
      */
-    public Double getMaxAsDouble() {
-        return maxValue != null ? maxValue.doubleValue() : null;
+    public Double getMinAsDouble() {
+        return minValue != null ? minValue.doubleValue() : null;
     }
 
     /**
-     * 获取最大值（long 类型）
+     * 获取最小值（long 类型）
      *
-     * @return 最大值，无数据时返回 null
+     * @return 最小值，无数据时返回 null
      */
-    public Long getMaxAsLong() {
-        return maxValue != null ? maxValue.longValue() : null;
+    public Long getMinAsLong() {
+        return minValue != null ? minValue.longValue() : null;
     }
 
     /**
-     * 获取最大值（int 类型）
+     * 获取最小值（int 类型）
      *
-     * @return 最大值，无数据时返回 null
+     * @return 最小值，无数据时返回 null
      */
-    public Integer getMaxAsInt() {
-        return maxValue != null ? maxValue.intValue() : null;
+    public Integer getMinAsInt() {
+        return minValue != null ? minValue.intValue() : null;
     }
 
     /**
@@ -155,25 +158,30 @@ public class JQuickMaxAggregator<T extends Number & Comparable<T>> implements Se
      * 重置累加器
      */
     public void reset() {
-        maxValue = null;
+        minValue = null;
         hasValue = false;
     }
 
     @Override
     public String toString() {
-        return String.format("MaxAggregator{max=%s}", maxValue);
+        return String.format("MinAggregator{min=%s}", minValue);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        JQuickMaxAggregator<?> that = (JQuickMaxAggregator<?>) o;
-        return hasValue == that.hasValue && Objects.equals(maxValue, that.maxValue);
+        JQuickMinAggregator<?> that = (JQuickMinAggregator<?>) o;
+        return hasValue == that.hasValue && Objects.equals(minValue, that.minValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(maxValue, hasValue);
+        return Objects.hash(minValue, hasValue);
+    }
+
+    @Override
+    public Object getResult() {
+        return minValue;
     }
 }

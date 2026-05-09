@@ -1,4 +1,4 @@
-package com.github.paohaijiao.domain;
+package com.github.paohaijiao.domain.impl;
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@ package com.github.paohaijiao.domain;
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
 
+import com.github.paohaijiao.domain.JQuickAggregator;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -27,7 +29,7 @@ import java.util.Objects;
  * @version 1.0.0
  * @since 2026/5/9
  */
-public class JQuickSumAggregator implements Serializable {
+public class JQuickSumAggregator implements Serializable, JQuickAggregator {
 
     private static final long serialVersionUID = 1L;
 
@@ -181,5 +183,10 @@ public class JQuickSumAggregator implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(sum, hasValue);
+    }
+
+    @Override
+    public Object getResult() {
+        return sum.toPlainString();
     }
 }

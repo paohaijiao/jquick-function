@@ -13,7 +13,9 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.domain;
+package com.github.paohaijiao.domain.impl;
+
+import com.github.paohaijiao.domain.JQuickAggregator;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -27,7 +29,7 @@ import java.util.Objects;
  * @version 1.0.0
  * @since 2026/5/9
  */
-public class JQuickLastAggregator<T> implements Serializable {
+public class JQuickLastAggregator<T> implements Serializable, JQuickAggregator {
 
     private static final long serialVersionUID = 1L;
 
@@ -94,5 +96,10 @@ public class JQuickLastAggregator<T> implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(value, hasValue);
+    }
+
+    @Override
+    public Object getResult() {
+        return value;
     }
 }
