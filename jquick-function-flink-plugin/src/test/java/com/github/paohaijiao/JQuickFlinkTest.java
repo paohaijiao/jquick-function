@@ -20,8 +20,8 @@ import com.github.paohaijiao.provider.JQuickFunctionProvider;
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
-import com.github.paohaijiao.provider.impl.CountProvider;
-import com.github.paohaijiao.provider.impl.SumProvider;
+import com.github.paohaijiao.provider.impl.JQuickCountProvider;
+import com.github.paohaijiao.provider.impl.JQuickSumProvider;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -135,8 +135,8 @@ public class JQuickFlinkTest {
 
         List<String> groupByColumns = Arrays.asList("department");
         List<JQuickFunctionProvider<?, ?>> aggProviders = Arrays.asList(
-                new SumProvider("salary", "runningSum"),
-                new CountProvider("runningCount")
+                new JQuickSumProvider("salary", "runningSum"),
+                new JQuickCountProvider("runningCount")
         );
         DataStream<JQuickRow> result = engine.aggregateStreamRolling(
                 input, groupByColumns, aggProviders);
@@ -154,8 +154,8 @@ public class JQuickFlinkTest {
         );
         List<String> groupByColumns = Arrays.asList("department");
         List<JQuickFunctionProvider<?, ?>> aggProviders = Arrays.asList(
-                new SumProvider("salary", "windowSum"),
-                new CountProvider("windowCount")
+                new JQuickSumProvider("salary", "windowSum"),
+                new JQuickCountProvider("windowCount")
         );
         DataStream<JQuickRow> result = engine.aggregateStreamWindow(
                 input, groupByColumns, aggProviders, 5000L);
@@ -174,8 +174,8 @@ public class JQuickFlinkTest {
         DataSet<JQuickRow> flinkInput = engine.toDataSet(dataSet);
         List<String> groupByColumns = Arrays.asList("dept");
         List<JQuickFunctionProvider<?, ?>> aggProviders = Arrays.asList(
-                new SumProvider("amount", "totalAmount"),
-                new CountProvider("count")
+                new JQuickSumProvider("amount", "totalAmount"),
+                new JQuickCountProvider("count")
         );
         long flinkStart = System.currentTimeMillis();
         DataSet<JQuickRow> flinkResult = engine.aggregateBatch(flinkInput, groupByColumns, aggProviders);
@@ -207,7 +207,7 @@ public class JQuickFlinkTest {
         );
         // 按品类实时统计销售额和销量
         List<String> groupByColumns = Arrays.asList("category");
-        List<JQuickFunctionProvider<?, ?>> aggProviders = Arrays.asList(new SumProvider("amount", "totalSales"), new SumProvider("quantity", "totalQuantity"), new CountProvider("transactionCount"));
+        List<JQuickFunctionProvider<?, ?>> aggProviders = Arrays.asList(new JQuickSumProvider("amount", "totalSales"), new JQuickSumProvider("quantity", "totalQuantity"), new JQuickCountProvider("transactionCount"));
         DataStream<JQuickRow> result = engine.aggregateStreamRolling(
                 salesStream, groupByColumns, aggProviders);
         result.print();

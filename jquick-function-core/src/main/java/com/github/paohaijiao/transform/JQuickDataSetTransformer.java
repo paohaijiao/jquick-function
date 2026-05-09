@@ -62,10 +62,10 @@ public abstract class JQuickDataSetTransformer {
      */
     public JQuickDataSet transform() {
         preProcess();
-        List<JQuickRow> originalRows = inputDataSet.getRows();  // 获取原始行
+        List<JQuickRow> originalRows = inputDataSet.getRows();
         for (int i = 0; i < transformedRows.size(); i++) {
             JQuickRow targetRow = transformedRows.get(i);
-            JQuickRow sourceRow = originalRows.get(i);  // 原始数据行
+            JQuickRow sourceRow = originalRows.get(i);
             transformRow(sourceRow, targetRow, providers, i);
         }
         postProcess();

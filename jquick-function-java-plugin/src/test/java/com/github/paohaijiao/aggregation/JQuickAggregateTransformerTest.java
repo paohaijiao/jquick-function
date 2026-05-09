@@ -16,9 +16,9 @@
 package com.github.paohaijiao.aggregation;
 
 import com.github.paohaijiao.provider.JQuickFunctionProvider;
-import com.github.paohaijiao.provider.impl.AvgProvider;
-import com.github.paohaijiao.provider.impl.CountProvider;
-import com.github.paohaijiao.provider.impl.SumProvider;
+import com.github.paohaijiao.provider.impl.JQuickAvgProvider;
+import com.github.paohaijiao.provider.impl.JQuickCountProvider;
+import com.github.paohaijiao.provider.impl.JQuickSumProvider;
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
@@ -78,7 +78,7 @@ public class JQuickAggregateTransformerTest {
     public void testGroupBySingleColumnSum() {
         List<String> groupByColumns = Arrays.asList("department");
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                new SumProvider("salary", "totalSalary")
+                new JQuickSumProvider("salary", "totalSalary")
         );
         JQuickAggregateTransformer transformer = new JQuickAggregateTransformer(originalDataSet, groupByColumns, providers);
         JQuickDataSet result = transformer.transform();
@@ -89,10 +89,10 @@ public class JQuickAggregateTransformerTest {
     public void testGroupBySingleColumnMultipleAggregations() {
         List<String> groupByColumns = Arrays.asList("department");
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                new SumProvider("salary", "totalSalary"),
-                new SumProvider("bonus", "totalBonus"),
-                new AvgProvider("bonus", "avgBonus"),
-                new CountProvider("employeeCount")
+                new JQuickSumProvider("salary", "totalSalary"),
+                new JQuickSumProvider("bonus", "totalBonus"),
+                new JQuickAvgProvider("bonus", "avgBonus"),
+                new JQuickCountProvider("employeeCount")
         );
         JQuickAggregateTransformer transformer = new JQuickAggregateTransformer(originalDataSet, groupByColumns, providers);
         JQuickDataSet result = transformer.transform();
@@ -106,8 +106,8 @@ public class JQuickAggregateTransformerTest {
     public void testGroupByMultipleColumns() {
         List<String> groupByColumns = Arrays.asList("department", "gender");
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                new SumProvider("salary", "totalSalary"),
-                new CountProvider("employeeCount")
+                new JQuickSumProvider("salary", "totalSalary"),
+                new JQuickCountProvider("employeeCount")
         );
         JQuickAggregateTransformer transformer = new JQuickAggregateTransformer(
                 originalDataSet, groupByColumns, providers
@@ -123,9 +123,9 @@ public class JQuickAggregateTransformerTest {
     public void testAggregateWithoutGroupBy() {
         List<String> groupByColumns = Arrays.asList();
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                new SumProvider("salary", "totalSalary"),
-                new SumProvider("bonus", "totalBonus"),
-                new CountProvider("totalCount")
+                new JQuickSumProvider("salary", "totalSalary"),
+                new JQuickSumProvider("bonus", "totalBonus"),
+                new JQuickCountProvider("totalCount")
         );
         JQuickAggregateTransformer transformer = new JQuickAggregateTransformer(
                 originalDataSet, groupByColumns, providers
@@ -141,8 +141,8 @@ public class JQuickAggregateTransformerTest {
     public void testAggregateWithMoreGroupFields() {
         List<String> groupByColumns = Arrays.asList("department");
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                new SumProvider("salary", "totalSalary"),
-                new CountProvider("count")
+                new JQuickSumProvider("salary", "totalSalary"),
+                new JQuickCountProvider("count")
         );
 
         JQuickAggregateTransformer transformer = new JQuickAggregateTransformer(originalDataSet, groupByColumns, providers);
@@ -157,8 +157,8 @@ public class JQuickAggregateTransformerTest {
     public void testAggregateWithTypeConversion() {
         List<String> groupByColumns = Arrays.asList("department");
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                new SumProvider("salary", "totalSalary"),
-                new CountProvider("employeeCount")
+                new JQuickSumProvider("salary", "totalSalary"),
+                new JQuickCountProvider("employeeCount")
         );
 
         JQuickAggregateTransformer transformer = new JQuickAggregateTransformer(originalDataSet, groupByColumns, providers);
@@ -184,8 +184,8 @@ public class JQuickAggregateTransformerTest {
         JQuickDataSet dataSetWithNull = new JQuickDataSet(columns, rowsWithNull);
         List<String> groupByColumns = Arrays.asList("department");
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                new SumProvider("salary", "totalSalary"),
-                new CountProvider("count")
+                new JQuickSumProvider("salary", "totalSalary"),
+                new JQuickCountProvider("count")
         );
         JQuickAggregateTransformer transformer = new JQuickAggregateTransformer(
                 dataSetWithNull, groupByColumns, providers
@@ -215,8 +215,8 @@ public class JQuickAggregateTransformerTest {
         JQuickDataSet largeDataSet = new JQuickDataSet(columns, rows);
         List<String> groupByColumns = Arrays.asList("dept");
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                new SumProvider("amount", "totalAmount"),
-                new CountProvider("count")
+                new JQuickSumProvider("amount", "totalAmount"),
+                new JQuickCountProvider("count")
         );
         long startTime = System.currentTimeMillis();
         JQuickAggregateTransformer transformer = new JQuickAggregateTransformer(
@@ -247,8 +247,8 @@ public class JQuickAggregateTransformerTest {
         JQuickDataSet testDataSet = new JQuickDataSet(columns, rows);
         List<String> groupByColumns = Arrays.asList("group");
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                new SumProvider("value", "sum"),
-                new CountProvider("count")
+                new JQuickSumProvider("value", "sum"),
+                new JQuickCountProvider("count")
         );
         JQuickAggregateTransformer transformer = new JQuickAggregateTransformer(
                 testDataSet, groupByColumns, providers
@@ -288,10 +288,10 @@ public class JQuickAggregateTransformerTest {
     public void testSalaryAnalysisReport() {
         List<String> groupByColumns = Arrays.asList("department");
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
-                new SumProvider("salary", "总薪资"),
-                new SumProvider("bonus", "总奖金"),
-                new CountProvider("人数"),
-                new SumProvider("salary", "人均薪资")  // 注意：这里实际需要 avg，但当前只有 sum
+                new JQuickSumProvider("salary", "总薪资"),
+                new JQuickSumProvider("bonus", "总奖金"),
+                new JQuickCountProvider("人数"),
+                new JQuickSumProvider("salary", "人均薪资")  // 注意：这里实际需要 avg，但当前只有 sum
         );
         JQuickAggregateTransformer transformer = new JQuickAggregateTransformer(
                 originalDataSet, groupByColumns, providers

@@ -26,7 +26,7 @@ import java.util.Objects;
  * @version 1.0.0
  * @since 2026/5/9
  */
-public class AvgAggregator<T extends Number> implements Serializable {
+public class JQuickAvgAggregator<T extends Number> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,7 +34,7 @@ public class AvgAggregator<T extends Number> implements Serializable {
 
     private long count = 0;
 
-    public AvgAggregator() {
+    public JQuickAvgAggregator() {
     }
 
     /**
@@ -64,7 +64,7 @@ public class AvgAggregator<T extends Number> implements Serializable {
      *
      * @param other 另一个累加器
      */
-    public void merge(AvgAggregator<T> other) {
+    public void merge(JQuickAvgAggregator<T> other) {
         if (other != null) {
             this.sum += other.sum;
             this.count += other.count;
@@ -133,7 +133,7 @@ public class AvgAggregator<T extends Number> implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AvgAggregator<?> that = (AvgAggregator<?>) o;
+        JQuickAvgAggregator<?> that = (JQuickAvgAggregator<?>) o;
         return Double.compare(that.sum, sum) == 0 && count == that.count;
     }
 

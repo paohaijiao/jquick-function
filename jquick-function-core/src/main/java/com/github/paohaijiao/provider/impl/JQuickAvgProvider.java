@@ -15,7 +15,7 @@ package com.github.paohaijiao.provider.impl;
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
 
-import com.github.paohaijiao.domain.AvgAggregator;
+import com.github.paohaijiao.domain.JQuickAvgAggregator;
 import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
@@ -47,28 +47,28 @@ import com.github.paohaijiao.statement.JQuickRow;
  * @version 1.0.0
  * @since 2026/5/9
  */
-public class AvgProvider extends JQuickAbstractAggregationProvider<AvgAggregator<Number>> {
+public class JQuickAvgProvider extends JQuickAbstractAggregationProvider<JQuickAvgAggregator<Number>> {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public AvgProvider(String sourceColumn, String targetField) {
-        super(sourceColumn, targetField, (Class) AvgAggregator.class);
+    public JQuickAvgProvider(String sourceColumn, String targetField) {
+        super(sourceColumn, targetField, (Class) JQuickAvgAggregator.class);
     }
 
     @Override
-    public AvgAggregator<Number> getInitialValue() {
-        return new AvgAggregator<>();
+    public JQuickAvgAggregator<Number> getInitialValue() {
+        return new JQuickAvgAggregator<>();
     }
 
     @Override
-    public AvgAggregator<Number> apply(JQuickRow row) {
+    public JQuickAvgAggregator<Number> apply(JQuickRow row) {
         Number value = row.getAs(sourceColumn, Number.class);
-        AvgAggregator<Number> aggregator = new AvgAggregator<>();
+        JQuickAvgAggregator<Number> aggregator = new JQuickAvgAggregator<>();
         aggregator.add(value);
         return aggregator;
     }
 
     @Override
-    public AvgAggregator<Number> accumulate(AvgAggregator<Number> current, AvgAggregator<Number> next) {
+    public JQuickAvgAggregator<Number> accumulate(JQuickAvgAggregator<Number> current, JQuickAvgAggregator<Number> next) {
         if (current == null) {
             return next;
         }
@@ -80,7 +80,7 @@ public class AvgProvider extends JQuickAbstractAggregationProvider<AvgAggregator
     }
 
     @Override
-    public AvgAggregator<Number> merge(AvgAggregator<Number> a, AvgAggregator<Number> b) {
+    public JQuickAvgAggregator<Number> merge(JQuickAvgAggregator<Number> a, JQuickAvgAggregator<Number> b) {
         if (a == null) return b;
         if (b == null) return a;
         a.merge(b);
@@ -93,7 +93,7 @@ public class AvgProvider extends JQuickAbstractAggregationProvider<AvgAggregator
      * @param aggregator 聚合累加器
      * @return 平均值，无数据时返回 null
      */
-    public Double extractResult(AvgAggregator<Number> aggregator) {
+    public Double extractResult(JQuickAvgAggregator<Number> aggregator) {
         return aggregator == null ? null : aggregator.getAvgOrNull();
     }
 
@@ -108,10 +108,10 @@ public class AvgProvider extends JQuickAbstractAggregationProvider<AvgAggregator
         if (dataSet == null || dataSet.getRows().isEmpty()) {
             return null;
         }
-        AvgProvider provider = new AvgProvider(sourceColumn, "avg");
-        AvgAggregator<Number> result = provider.getInitialValue();
+        JQuickAvgProvider provider = new JQuickAvgProvider(sourceColumn, "avg");
+        JQuickAvgAggregator<Number> result = provider.getInitialValue();
         for (JQuickRow row : dataSet.getRows()) {
-            AvgAggregator<Number> value = provider.apply(row);
+            JQuickAvgAggregator<Number> value = provider.apply(row);
             result = provider.accumulate(result, value);
         }
         return provider.extractResult(result);

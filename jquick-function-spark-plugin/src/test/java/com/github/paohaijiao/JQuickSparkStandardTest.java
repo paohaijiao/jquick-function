@@ -20,8 +20,8 @@ import com.github.paohaijiao.provider.JQuickFunctionProvider;
 
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
-import com.github.paohaijiao.provider.impl.CountProvider;
-import com.github.paohaijiao.provider.impl.SumProvider;
+import com.github.paohaijiao.provider.impl.JQuickCountProvider;
+import com.github.paohaijiao.provider.impl.JQuickSumProvider;
 
 import org.apache.spark.sql.SparkSession;
 import org.junit.Before;
@@ -111,8 +111,8 @@ public class JQuickSparkStandardTest {
     public void testDistributedAggregation() {
         List<String> groupByColumns = Arrays.asList("department");
         List<JQuickFunctionProvider<?, ?>> aggProviders = Arrays.asList(
-                new SumProvider("salary", "totalSalary"),
-                new CountProvider("employeeCount")
+                new JQuickSumProvider("salary", "totalSalary"),
+                new JQuickCountProvider("employeeCount")
         );
         JQuickDataSet result = engine.aggregate(originalDataSet, groupByColumns, aggProviders);
         result.printTable();
@@ -126,9 +126,9 @@ public class JQuickSparkStandardTest {
     public void testDistributedMultiGroupBy() {
         List<String> groupByColumns = Arrays.asList("department", "gender");
         List<JQuickFunctionProvider<?, ?>> aggProviders = Arrays.asList(
-                new SumProvider("salary", "totalSalary"),
-                new SumProvider("bonus", "totalBonus"),
-                new CountProvider("count")
+                new JQuickSumProvider("salary", "totalSalary"),
+                new JQuickSumProvider("bonus", "totalBonus"),
+                new JQuickCountProvider("count")
         );
 
         JQuickDataSet result = engine.aggregate(originalDataSet, groupByColumns, aggProviders);
@@ -169,8 +169,8 @@ public class JQuickSparkStandardTest {
         System.out.println("  - 内存估算: ~" + (rowCount * 50 / 1024) + " MB");
         List<String> groupByColumns = Arrays.asList("dept");
         List<JQuickFunctionProvider<?, ?>> aggProviders = Arrays.asList(
-                new SumProvider("amount", "totalAmount"),
-                new CountProvider("count")
+                new JQuickSumProvider("amount", "totalAmount"),
+                new JQuickCountProvider("count")
         );
         // 执行聚合
         long startTime = System.currentTimeMillis();
@@ -200,9 +200,9 @@ public class JQuickSparkStandardTest {
 
         List<String> groupByColumns = Arrays.asList("dept", "category");
         List<JQuickFunctionProvider<?, ?>> aggProviders = Arrays.asList(
-                new SumProvider("amount", "totalAmount"),
-                new SumProvider("quantity", "totalQuantity"),
-                new CountProvider("count")
+                new JQuickSumProvider("amount", "totalAmount"),
+                new JQuickSumProvider("quantity", "totalQuantity"),
+                new JQuickCountProvider("count")
         );
 
         long startTime = System.currentTimeMillis();

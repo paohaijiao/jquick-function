@@ -19,8 +19,8 @@ import com.github.paohaijiao.provider.JQuickFunctionProvider;
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
-import com.github.paohaijiao.provider.impl.CountProvider;
-import com.github.paohaijiao.provider.impl.SumProvider;
+import com.github.paohaijiao.provider.impl.JQuickCountProvider;
+import com.github.paohaijiao.provider.impl.JQuickSumProvider;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.Dataset;
@@ -154,10 +154,10 @@ public class JQuickSparkEngine implements Serializable {
                             (JQuickFunctionProvider<JQuickRow, Object>) provider;
                     Object newValue = typedProvider.apply(row);
 
-                    if (provider instanceof SumProvider) {
+                    if (provider instanceof JQuickSumProvider) {
                         double sum = toDouble(currentValue) + toDouble(newValue);
                         aggRow.put(targetField, sum);
-                    } else if (provider instanceof CountProvider) {
+                    } else if (provider instanceof JQuickCountProvider) {
                         long count = toLong(currentValue) + 1;
                         aggRow.put(targetField, count);
                     } else {
@@ -182,9 +182,9 @@ public class JQuickSparkEngine implements Serializable {
                         Object val1 = row1.get(targetField);
                         Object val2 = row2.get(targetField);
 
-                        if (provider instanceof SumProvider) {
+                        if (provider instanceof JQuickSumProvider) {
                             result.put(targetField, toDouble(val1) + toDouble(val2));
-                        } else if (provider instanceof CountProvider) {
+                        } else if (provider instanceof JQuickCountProvider) {
                             result.put(targetField, toLong(val1) + toLong(val2));
                         }
                     }

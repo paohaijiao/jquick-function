@@ -1,10 +1,10 @@
 package com.github.paohaijiao.transform;
 
-import com.github.paohaijiao.domain.AvgAggregator;
+import com.github.paohaijiao.domain.JQuickAvgAggregator;
 import com.github.paohaijiao.group.JQuickGroupByKeyDomain;
 import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 import com.github.paohaijiao.provider.JQuickFunctionProvider;
-import com.github.paohaijiao.provider.impl.AvgProvider;
+import com.github.paohaijiao.provider.impl.JQuickAvgProvider;
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
@@ -24,16 +24,13 @@ public class JQuickAggregateTransformer extends JQuickDataSetTransformer {
 
     @Override
     protected void transformRow(JQuickRow sourceRow, JQuickRow targetRow, List<JQuickFunctionProvider<?, ?>> providers, int rowIndex) {
-        JQuickGroupByKeyDomain key = new JQuickGroupByKeyDomain(sourceRow, groupByColumns);
-        // 获取或创建聚合行
-        JQuickRow aggRow = aggregateResults.computeIfAbsent(key, k -> {
+        JQuickGroupByKeyDomain groupByKeyDomain = new JQuickGroupByKeyDomain(sourceRow, groupByColumns);
+        JQuickRow aggRow = aggregateResults.computeIfAbsent(groupByKeyDomain, k -> {
             JQuickRow newRow = new JQuickRow();
-            // 设置分组字段值
             for (String col : groupByColumns) {
                 newRow.put(col, sourceRow.get(col));
             }
-            // 初始化各聚合字段的初始值
-            for (JQuickFunctionProvider<?, ?> provider : providers) {
+            for (JQuickFunctionProvider<?, ?> provider : providers) {   //初始化聚合值
                 if (provider instanceof JQuickAbstractAggregationProvider) {
                     JQuickAbstractAggregationProvider<?> aggProvider = (JQuickAbstractAggregationProvider<?>) provider;
                     newRow.put(provider.getTargetField(), aggProvider.getInitialValue());
@@ -43,8 +40,7 @@ public class JQuickAggregateTransformer extends JQuickDataSetTransformer {
             }
             return newRow;
         });
-        // 处理每个字段映射
-        for (JQuickFunctionProvider<?, ?> provider : providers) {
+        for (JQuickFunctionProvider<?, ?> provider : providers) {//对相关值进行迭代
             String targetField = provider.getTargetField();
             Object currentValue = aggRow.get(targetField);
             Object rowValue = ((JQuickFunctionProvider<JQuickRow, Object>) provider).apply(sourceRow);
@@ -65,17 +61,16 @@ public class JQuickAggregateTransformer extends JQuickDataSetTransformer {
         for (Map.Entry<JQuickGroupByKeyDomain, JQuickRow> entry : aggregateResults.entrySet()) {
             JQuickRow row = entry.getValue();
             JQuickRow resultRow = new JQuickRow();
-            // 复制分组字段
             for (String col : groupByColumns) {
                 resultRow.put(col, row.get(col));
             }
             for (JQuickFunctionProvider<?, ?> provider : providers) {
                 String targetField = provider.getTargetField();
                 Object value = row.get(targetField);
-                if (provider instanceof AvgProvider) {
+                if (provider instanceof JQuickAvgProvider) {
                     // 对于 AvgProvider，提取平均值
-                    AvgProvider avgProvider = (AvgProvider) provider;
-                    AvgAggregator<Number> aggregator = (AvgAggregator<Number>) value;
+                    JQuickAvgProvider avgProvider = (JQuickAvgProvider) provider;
+                    JQuickAvgAggregator<Number> aggregator = (JQuickAvgAggregator<Number>) value;
                     Double avg = avgProvider.extractResult(aggregator);
                     resultRow.put(targetField, avg);
                 } else if (provider instanceof JQuickAbstractAggregationProvider) {

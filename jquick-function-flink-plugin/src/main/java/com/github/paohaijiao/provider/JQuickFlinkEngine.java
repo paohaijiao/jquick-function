@@ -26,8 +26,8 @@ package com.github.paohaijiao.provider;
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
-import com.github.paohaijiao.provider.impl.CountProvider;
-import com.github.paohaijiao.provider.impl.SumProvider;
+import com.github.paohaijiao.provider.impl.JQuickCountProvider;
+import com.github.paohaijiao.provider.impl.JQuickSumProvider;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.DataSet;
@@ -202,10 +202,10 @@ public class JQuickFlinkEngine implements Serializable {
                 Object v1 = t1.f1.get(field);
                 Object v2 = t2.f1.get(field);
 
-                if (provider instanceof SumProvider) {
+                if (provider instanceof JQuickSumProvider) {
                     double sum = toDouble(v1) + toDouble(v2);
                     merged.put(field, sum);
-                } else if (provider instanceof CountProvider) {
+                } else if (provider instanceof JQuickCountProvider) {
                     long count = toLong(v1) + toLong(v2);
                     merged.put(field, count);
                 }
@@ -251,10 +251,10 @@ public class JQuickFlinkEngine implements Serializable {
                         (JQuickFunctionProvider<JQuickRow, Object>) provider;
                 Object newValue = typedProvider.apply(value);
 
-                if (provider instanceof SumProvider) {
+                if (provider instanceof JQuickSumProvider) {
                     double sum = toDouble(current) + toDouble(newValue);
                     state.put(field, sum);
-                } else if (provider instanceof CountProvider) {
+                } else if (provider instanceof JQuickCountProvider) {
                     long count = toLong(current) + 1;
                     state.put(field, count);
                 }
@@ -306,10 +306,10 @@ public class JQuickFlinkEngine implements Serializable {
                         (JQuickFunctionProvider<JQuickRow, Object>) provider;
                 Object newValue = typedProvider.apply(value);
 
-                if (provider instanceof SumProvider) {
+                if (provider instanceof JQuickSumProvider) {
                     double sum = toDouble(current) + toDouble(newValue);
                     accumulator.put(field, sum);
-                } else if (provider instanceof CountProvider) {
+                } else if (provider instanceof JQuickCountProvider) {
                     long count = toLong(current) + 1;
                     accumulator.put(field, count);
                 }
@@ -330,9 +330,9 @@ public class JQuickFlinkEngine implements Serializable {
                 Object va = a.get(field);
                 Object vb = b.get(field);
 
-                if (provider instanceof SumProvider) {
+                if (provider instanceof JQuickSumProvider) {
                     merged.put(field, toDouble(va) + toDouble(vb));
-                } else if (provider instanceof CountProvider) {
+                } else if (provider instanceof JQuickCountProvider) {
                     merged.put(field, toLong(va) + toLong(vb));
                 }
             }
