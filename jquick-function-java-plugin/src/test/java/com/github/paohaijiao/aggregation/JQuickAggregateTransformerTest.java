@@ -95,6 +95,8 @@ public class JQuickAggregateTransformerTest {
                 new JQuickMedianProvider("bonus", "medianBonus"),
                 new JQuickStddevProvider("bonus", "stddevBonus"),
                 new JQuickVarianceProvider("bonus", "varianceBonus"),
+                new JQuickFirstProvider("bonus", "firstBonus"),
+                new JQuickLastProvider("bonus", "lasstBonus"),
                 new JQuickCountProvider("employeeCount")
         );
         JQuickAggregateTransformer transformer = new JQuickAggregateTransformer(originalDataSet, groupByColumns, providers);
