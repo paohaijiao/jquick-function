@@ -15,6 +15,7 @@
  */
 package com.github.paohaijiao.provider.aggregate;
 
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickStddevAggregator;
 import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 import com.github.paohaijiao.statement.JQuickDataSet;
@@ -71,6 +72,11 @@ public class JQuickStddevProvider extends JQuickAbstractAggregationProvider<JQui
     @Override
     public JQuickStddevAggregator getInitialValue() {
         return new JQuickStddevAggregator();
+    }
+
+    @Override
+    public String getName() {
+        return JQuickAggregateProviderMethodConstants.STDDEV;
     }
 
     @Override

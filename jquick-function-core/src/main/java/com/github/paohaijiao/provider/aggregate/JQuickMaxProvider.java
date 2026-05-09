@@ -15,6 +15,7 @@
  */
 package com.github.paohaijiao.provider.aggregate;
 
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickMaxAggregator;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
@@ -42,6 +43,11 @@ public class JQuickMaxProvider extends JQuickAbstractAggregationProvider<JQuickM
     @Override
     public JQuickMaxAggregator getInitialValue() {
         return new JQuickMaxAggregator<>();
+    }
+
+    @Override
+    public String getName() {
+        return JQuickAggregateProviderMethodConstants.MAX;
     }
 
     @Override

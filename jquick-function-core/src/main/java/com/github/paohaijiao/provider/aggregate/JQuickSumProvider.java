@@ -29,6 +29,7 @@ package com.github.paohaijiao.provider.aggregate;
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickSumAggregator;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
@@ -59,6 +60,11 @@ public class JQuickSumProvider extends JQuickAbstractAggregationProvider<JQuickS
     @Override
     public JQuickSumAggregator getInitialValue() {
         return new JQuickSumAggregator();
+    }
+
+    @Override
+    public String getName() {
+        return JQuickAggregateProviderMethodConstants.SUM;
     }
 
     @Override

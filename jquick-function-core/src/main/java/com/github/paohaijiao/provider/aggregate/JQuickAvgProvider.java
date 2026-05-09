@@ -15,6 +15,7 @@ package com.github.paohaijiao.provider.aggregate;
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
 
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickAvgAggregator;
 import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 import com.github.paohaijiao.statement.JQuickDataSet;
@@ -48,7 +49,10 @@ import com.github.paohaijiao.statement.JQuickRow;
  * @since 2026/5/9
  */
 public class JQuickAvgProvider extends JQuickAbstractAggregationProvider<JQuickAvgAggregator<Number>> {
-
+    @Override
+    public String getName() {
+        return JQuickAggregateProviderMethodConstants.AVG;
+    }
     @SuppressWarnings({"unchecked", "rawtypes"})
     public JQuickAvgProvider(String sourceColumn, String targetField) {
         super(sourceColumn, targetField, (Class) JQuickAvgAggregator.class);
@@ -58,6 +62,8 @@ public class JQuickAvgProvider extends JQuickAbstractAggregationProvider<JQuickA
     public JQuickAvgAggregator<Number> getInitialValue() {
         return new JQuickAvgAggregator<>();
     }
+
+
 
     @Override
     public JQuickAvgAggregator<Number> apply(JQuickRow row) {

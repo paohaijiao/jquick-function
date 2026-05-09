@@ -15,6 +15,7 @@
  */
 package com.github.paohaijiao.provider.aggregate;
 
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickMinAggregator;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
@@ -43,6 +44,11 @@ public class JQuickMinProvider extends JQuickAbstractAggregationProvider<JQuickM
     @Override
     public JQuickMinAggregator getInitialValue() {
         return new JQuickMinAggregator<>();
+    }
+
+    @Override
+    public String getName() {
+        return JQuickAggregateProviderMethodConstants.MIN;
     }
 
     @Override

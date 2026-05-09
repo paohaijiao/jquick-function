@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public interface JQuickFunctionProvider<T, R> extends Serializable {
 
-
+    public String getName();
 
 
     public R apply(T t);

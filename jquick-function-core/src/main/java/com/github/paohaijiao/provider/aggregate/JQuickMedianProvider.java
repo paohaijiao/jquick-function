@@ -15,6 +15,7 @@ package com.github.paohaijiao.provider.aggregate;
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
 
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickMedianAggregator;
 import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 import com.github.paohaijiao.statement.JQuickDataSet;
@@ -63,6 +64,11 @@ public class JQuickMedianProvider extends JQuickAbstractAggregationProvider<JQui
     @Override
     public JQuickMedianAggregator getInitialValue() {
         return new JQuickMedianAggregator<>();
+    }
+
+    @Override
+    public String getName() {
+        return JQuickAggregateProviderMethodConstants.MEDIAN;
     }
 
     @Override

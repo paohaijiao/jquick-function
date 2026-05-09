@@ -16,6 +16,7 @@
  */
 package com.github.paohaijiao.provider.aggregate;
 
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickVarianceAggregator;
 import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 import com.github.paohaijiao.statement.JQuickDataSet;
@@ -72,6 +73,11 @@ public class JQuickVarianceProvider extends JQuickAbstractAggregationProvider<JQ
     @Override
     public JQuickVarianceAggregator getInitialValue() {
         return new JQuickVarianceAggregator();
+    }
+
+    @Override
+    public String getName() {
+        return JQuickAggregateProviderMethodConstants.VARIANCE;
     }
 
     @Override

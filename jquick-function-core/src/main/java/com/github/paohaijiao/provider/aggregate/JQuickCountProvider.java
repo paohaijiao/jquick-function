@@ -15,6 +15,7 @@
  */
 package com.github.paohaijiao.provider.aggregate;
 
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickCountAggregator;
 import com.github.paohaijiao.statement.JQuickRow;
 import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
@@ -64,6 +65,11 @@ public class JQuickCountProvider extends JQuickAbstractAggregationProvider<JQuic
     @Override
     public JQuickCountAggregator getInitialValue() {
         return new JQuickCountAggregator();
+    }
+
+    @Override
+    public String getName() {
+        return JQuickAggregateProviderMethodConstants.COUNT;
     }
 
     @Override

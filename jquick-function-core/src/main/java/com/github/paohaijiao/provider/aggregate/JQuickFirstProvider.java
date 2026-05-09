@@ -15,6 +15,7 @@ package com.github.paohaijiao.provider.aggregate;
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
 
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickFirstAggregator;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
@@ -72,6 +73,11 @@ public class JQuickFirstProvider<T> extends JQuickAbstractAggregationProvider<JQ
     @Override
     public JQuickFirstAggregator<T> getInitialValue() {
         return new JQuickFirstAggregator<>();
+    }
+
+    @Override
+    public String getName() {
+        return JQuickAggregateProviderMethodConstants.FIRST;
     }
 
     @Override

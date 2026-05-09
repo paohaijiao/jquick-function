@@ -15,6 +15,7 @@ package com.github.paohaijiao.provider.aggregate;
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
 
+import com.github.paohaijiao.core.constant.JQuickAggregateProviderMethodConstants;
 import com.github.paohaijiao.domain.impl.JQuickLastAggregator;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
@@ -70,6 +71,11 @@ public class JQuickLastProvider<T> extends JQuickAbstractAggregationProvider<JQu
     @Override
     public JQuickLastAggregator<T> getInitialValue() {
         return new JQuickLastAggregator<>();
+    }
+
+    @Override
+    public String getName() {
+        return JQuickAggregateProviderMethodConstants.LAST;
     }
 
     @Override
