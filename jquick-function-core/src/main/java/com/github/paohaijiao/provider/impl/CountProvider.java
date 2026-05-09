@@ -13,20 +13,27 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.transform;
+package com.github.paohaijiao.provider.impl;
 
 import com.github.paohaijiao.statement.JQuickRow;
+import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 
 /**
- * packageName com.github.paohaijiao.provider.aggregate.impl
+ * COUNT 聚合提供者
  *
  * @author Martin
  * @version 1.0.0
  * @since 2026/5/8
  */
-public class CountProvider extends AbstractAggregationProvider<Long> {
+public class CountProvider extends JQuickAbstractAggregationProvider<Long> {
+
     public CountProvider(String targetField) {
         super(null, targetField, Long.class);
+    }
+
+    @Override
+    public Long getInitialValue() {
+        return 0L;
     }
 
     @Override
@@ -37,5 +44,10 @@ public class CountProvider extends AbstractAggregationProvider<Long> {
     @Override
     public Long accumulate(Long current, Long next) {
         return current + next;
+    }
+
+    @Override
+    public Long merge(Long a, Long b) {
+        return a + b;
     }
 }

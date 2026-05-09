@@ -16,8 +16,9 @@
 package com.github.paohaijiao.aggregation;
 
 import com.github.paohaijiao.provider.JQuickFunctionProvider;
-import com.github.paohaijiao.transform.CountProvider;
-import com.github.paohaijiao.transform.SumProvider;
+import com.github.paohaijiao.provider.impl.AvgProvider;
+import com.github.paohaijiao.provider.impl.CountProvider;
+import com.github.paohaijiao.provider.impl.SumProvider;
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
@@ -90,6 +91,7 @@ public class JQuickAggregateTransformerTest {
         List<JQuickFunctionProvider<?, ?>> providers = Arrays.asList(
                 new SumProvider("salary", "totalSalary"),
                 new SumProvider("bonus", "totalBonus"),
+                new AvgProvider("bonus", "avgBonus"),
                 new CountProvider("employeeCount")
         );
         JQuickAggregateTransformer transformer = new JQuickAggregateTransformer(originalDataSet, groupByColumns, providers);

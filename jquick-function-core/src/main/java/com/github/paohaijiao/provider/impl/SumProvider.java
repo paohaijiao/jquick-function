@@ -13,9 +13,10 @@
  *
  * Copyright (c) [2025-2099] Martin (goudingcheng@gmail.com)
  */
-package com.github.paohaijiao.transform;
+package com.github.paohaijiao.provider.impl;
 
 import com.github.paohaijiao.statement.JQuickRow;
+import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 
 /**
  * packageName com.github.paohaijiao.provider.aggregate.impl
@@ -24,9 +25,15 @@ import com.github.paohaijiao.statement.JQuickRow;
  * @version 1.0.0
  * @since 2026/5/8
  */
-public  class SumProvider extends AbstractAggregationProvider<Double> {
+public  class SumProvider extends JQuickAbstractAggregationProvider<Double> {
+
     public SumProvider(String sourceColumn, String targetField) {
         super(sourceColumn, targetField, Double.class);
+    }
+
+    @Override
+    public Double getInitialValue() {
+        return 0.0;
     }
 
     @Override
@@ -38,5 +45,10 @@ public  class SumProvider extends AbstractAggregationProvider<Double> {
     @Override
     public Double accumulate(Double current, Double next) {
         return current + next;
+    }
+
+    @Override
+    public Double merge(Double a, Double b) {
+        return a + b;
     }
 }

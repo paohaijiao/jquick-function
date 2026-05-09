@@ -9,6 +9,8 @@ import java.io.Serializable;
 public interface JQuickFunctionProvider<T, R> extends Serializable {
 
 
+
+
     public R apply(T t);
 
     /**

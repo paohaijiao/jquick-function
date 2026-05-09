@@ -1,8 +1,7 @@
 package com.github.paohaijiao.transform;
 
-
+import com.github.paohaijiao.provider.JQuickAbstractAggregationProvider;
 import com.github.paohaijiao.provider.JQuickFunctionProvider;
-
 import com.github.paohaijiao.statement.JQuickColumnMeta;
 import com.github.paohaijiao.statement.JQuickDataSet;
 import com.github.paohaijiao.statement.JQuickRow;
@@ -10,16 +9,10 @@ import com.github.paohaijiao.statement.JQuickRow;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * 支持聚合查询的 SELECT 转换器
- * 类似于 GROUP BY + 聚合函数
- */
 public class JQuickAggregateTransformer extends JQuickDataSetTransformer {
 
-    /** Group By 的字段名 */
     private final List<String> groupByColumns;
 
-    /** 聚合结果缓存 */
     private final Map<GroupKey, JQuickRow> aggregateResults = new HashMap<>();
 
     public JQuickAggregateTransformer(JQuickDataSet inputDataSet, List<String> groupByColumns, List<JQuickFunctionProvider<?, ?>> providers) {
@@ -28,37 +21,44 @@ public class JQuickAggregateTransformer extends JQuickDataSetTransformer {
     }
 
     @Override
-    protected void transformRow(JQuickRow sourceRow, JQuickRow targetRow, List<JQuickFunctionProvider<?, ?>> fieldMappings, int rowIndex) {
+    protected void transformRow(JQuickRow sourceRow, JQuickRow targetRow, List<JQuickFunctionProvider<?, ?>> providers, int rowIndex) {
         GroupKey key = new GroupKey(sourceRow, groupByColumns);
         // 获取或创建聚合行
         JQuickRow aggRow = aggregateResults.computeIfAbsent(key, k -> {
             JQuickRow newRow = new JQuickRow();
+            // 设置分组字段值
             for (String col : groupByColumns) {
                 newRow.put(col, sourceRow.get(col));
             }
+            // 初始化各聚合字段的初始值
+            for (JQuickFunctionProvider<?, ?> provider : providers) {
+                if (provider instanceof JQuickAbstractAggregationProvider) {
+                    JQuickAbstractAggregationProvider<?> aggProvider = (JQuickAbstractAggregationProvider<?>) provider;
+                    newRow.put(provider.getTargetField(), aggProvider.getInitialValue());
+                } else {
+                    newRow.put(provider.getTargetField(), null);
+                }
+            }
             return newRow;
         });
-        for (JQuickFunctionProvider<?, ?> provider : fieldMappings) {
+        // 处理每个字段映射
+        for (JQuickFunctionProvider<?, ?> provider : providers) {
             String targetField = provider.getTargetField();
             Object currentValue = aggRow.get(targetField);
-            Object newValue = ((JQuickFunctionProvider<JQuickRow, Object>) provider).apply(sourceRow);
-            // 如果是聚合函数，需要累加
-            if (provider instanceof SumProvider) {
-                double sum = (currentValue instanceof Number ? ((Number) currentValue).doubleValue() : 0.0) + (newValue instanceof Number ? ((Number) newValue).doubleValue() : 0.0);
-                aggRow.put(targetField, sum);
-            } else if (provider instanceof CountProvider) {
-                long count = (currentValue instanceof Number ? ((Number) currentValue).longValue() : 0L) + 1;
-                aggRow.put(targetField, count);
-            } else {
-                // 非聚合函数，直接覆盖（取最后一个值）
+            Object rowValue = ((JQuickFunctionProvider<JQuickRow, Object>) provider).apply(sourceRow);
+            if (provider instanceof JQuickAbstractAggregationProvider) {
+                @SuppressWarnings("unchecked")
+                JQuickAbstractAggregationProvider<Object> aggProvider = (JQuickAbstractAggregationProvider<Object>) provider;
+                Object newValue = aggProvider.accumulate(currentValue, rowValue);
                 aggRow.put(targetField, newValue);
+            } else {// 非聚合函数，直接覆盖（取最后一个值）
+                aggRow.put(targetField, rowValue);
             }
         }
     }
 
     @Override
     protected void postProcess() {
-        // 将聚合结果转换回行列表
         transformedRows.clear();
         transformedRows.addAll(aggregateResults.values());
     }
@@ -84,13 +84,10 @@ public class JQuickAggregateTransformer extends JQuickDataSetTransformer {
      * 分组键
      */
     private static class GroupKey {
-
         private final List<Object> values;
 
         GroupKey(JQuickRow row, List<String> columns) {
-            this.values = columns.stream()
-                    .map(row::get)
-                    .collect(Collectors.toList());
+            this.values = columns.stream().map(row::get).collect(Collectors.toList());
         }
 
         @Override
